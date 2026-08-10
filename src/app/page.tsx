@@ -22,10 +22,10 @@ export default function Home() {
         <Membership />
         <Testimonials />
         <Activities />
-        <CTAFooter />
-        <Questions />
         <Banner />
         <BriefGallery style="overview"/>
+        <CTAFooter />
+        <Questions />
         <Footer />
       </main>
     </div>

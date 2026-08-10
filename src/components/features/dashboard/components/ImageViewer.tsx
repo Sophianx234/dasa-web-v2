@@ -70,7 +70,7 @@ function ImageViewer({ images, type = 'normal' }: imageViewerProps) {
                     src={item.secure_url}
                     alt="Gallery item"
                     // w-full and h-auto allows the image to scale naturally based on its native aspect ratio
-                    className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-auto object-cover transform transition-transform duration-700 scale-105"
                     // CRITICAL: react-lazy-load adds a span wrapper. It must be display: block to prevent layout bugs
                     wrapperClassName="w-full block" 
                   />

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, ChevronDown, X } from "lucide-react";
 
-export const faqsData = [
+const faqsData = [
   { question: "What is DaSA?", answer: "DaSA stands for the Dagbon Students Association, an organization aimed at supporting Dagbon students at the University of Ghana." },
   { question: "Who can join DaSA?", answer: "DaSA membership is open to all Dagbon students and those interested in learning about Dagbon culture." },
   { question: "What are the benefits of joining DaSA?", answer: "Members gain access to cultural events, networking opportunities, academic support, and a sense of community." },
