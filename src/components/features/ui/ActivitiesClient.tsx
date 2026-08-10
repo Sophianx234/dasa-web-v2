@@ -90,7 +90,7 @@ export default function ActivitiesClient({ videos }: { videos: videoI[] }) {
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   className="w-full h-full flex justify-center"
                 >
-                  <div className={`w-full md:w-[80%] shadow-lg rounded-xl overflow-hidden  ${turnOffLight ? 'bg-black' : 'bg-white'}`}>
+                  <div className={`w-full md:w-[80%] shadow rounded-xl overflow-hidden  ${turnOffLight ? 'bg-black' : 'bg-white'}`}>
                      <VideoPlayer src={videosToShow[activeIndex].secure_url} />
                   </div>
                 </motion.div>
