@@ -33,7 +33,7 @@ export default function Impact() {
           <img
             src={IMPACT_IMAGE_SRC}
             alt="Dagbon Students Association Impact"
-            className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-1000 "
           />
           {/* Subtle overlay to give the image a cinematic, premium depth */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#33312e]/60 via-[#33312e]/10 to-transparent mix-blend-multiply"></div>
