@@ -30,7 +30,7 @@ function AccordionItem({ faq, isOpen, onClick }: { faq: FAQItem, isOpen: boolean
     <motion.div 
       layout
       className={`border-b transition-colors duration-300 ${
-        isOpen ? "border-dasalight" : "border-[#33312e]/10 dark:border-[#fef4e9]/10"
+        isOpen ? "border-dasalight" : "border-[#33312e]/10 "
       }`}
     >
       <button
@@ -38,8 +38,8 @@ function AccordionItem({ faq, isOpen, onClick }: { faq: FAQItem, isOpen: boolean
         className="w-full flex items-center justify-between py-6 text-left focus:outline-none group"
         aria-expanded={isOpen}
       >
-        <span className={`text-lg md:text-xl font-semibold pr-8 transition-colors duration-300 ${
-          isOpen ? "text-zinc-900" : "text-[#33312e] dark:text-[#fef4e9] group-hover:text-zinc-900"
+        <span className={`text-lg md:text-xl rounded-full font-semibold pr-8 transition-colors duration-300 ${
+          isOpen ? "text-zinc-900" : "text-[#33312e]  group-hover:text-zinc-900"
         }`}>
           {faq.question}
         </span>
@@ -47,7 +47,7 @@ function AccordionItem({ faq, isOpen, onClick }: { faq: FAQItem, isOpen: boolean
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
           className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full border transition-colors duration-300 ${
-            isOpen ? "border-dasalight text-dasalight" : "border-[#33312e]/20 text-[#33312e] dark:border-[#fef4e9]/20 dark:text-[#fef4e9]"
+            isOpen ? "border-dasalight text-dasalight" : "border-[#33312e]/20 text-[#33312e] "
           }`}
         >
           <ChevronDown className="w-4 h-4" />
@@ -62,7 +62,7 @@ function AccordionItem({ faq, isOpen, onClick }: { faq: FAQItem, isOpen: boolean
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-6 text-[#33312e]/70 dark:text-[#fef4e9]/70 font-poppins text-base leading-relaxed">
+            <p className="pb-6 text-[#33312e]/70  font-poppins text-base leading-relaxed">
               {faq.answer}
             </p>
           </motion.div>
@@ -98,9 +98,9 @@ function AccordionList() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-[#33312e] dark:text-[#fef4e9] mb-6 font-rethink"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-[#33312e]  mb-6 font-rethink"
           >
-            Frequently Asked <span className="text-dasalight">Questions</span>.
+            Frequently Asked <span className="text-dasalight">Questions</span> <span className="font-poppins ">.</span>
           </motion.h2>
           
           {/* Search Input */}
@@ -112,7 +112,7 @@ function AccordionList() {
             className="relative max-w-xl mx-auto mt-8"
           >
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-[#33312e]/40 dark:text-[#fef4e9]/40" />
+              <Search className="h-5 w-5 text-[#33312e]/40 " />
             </div>
             
             <input
@@ -120,7 +120,7 @@ function AccordionList() {
               placeholder="Search questions or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-12 py-4 bg-transparent border-b-2 border-[#33312e]/20 dark:border-[#fef4e9]/20 text-[#33312e] dark:text-[#fef4e9] placeholder:text-[#33312e]/40 dark:placeholder:text-[#fef4e9]/40 focus:border-dasalight focus:outline-none transition-colors font-poppins"
+              className="w-full pl-12 pr-12 py-4 bg-transparent border-b-2 border-[#33312e]/20  text-[#33312e]  placeholder:text-[#33312e]/40  focus:border-dasalight focus:outline-none transition-colors font-poppins"
             />
             
             <AnimatePresence>
@@ -131,7 +131,7 @@ function AccordionList() {
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.2 }}
                   onClick={() => setSearchQuery("")}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#33312e]/40 hover:text-[#33312e] dark:text-[#fef4e9]/40 dark:hover:text-[#fef4e9] transition-colors focus:outline-none"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#33312e]/40 hover:text-[#33312e]  transition-colors focus:outline-none"
                   aria-label="Clear search"
                 >
                   <X className="h-5 w-5" />
@@ -167,7 +167,7 @@ function AccordionList() {
                 animate={{ opacity: 1 }}
                 className="text-center py-12"
               >
-                <p className="text-[#33312e]/60 dark:text-[#fef4e9]/60 font-poppins">
+                <p className="text-[#33312e]/60  font-poppins">
                   No results found for "{searchQuery}".
                 </p>
               </motion.div>
