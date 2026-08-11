@@ -32,56 +32,74 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
       style={{ 
-        top: `calc(15vh + ${index * 40}px)`,
-        // Hardware acceleration hint
+        top: `calc(10vh + ${index * 24}px)`,
         willChange: "transform, opacity"
       }}
     >
       <div 
-        className={`${bgColor} w-full h-auto md:h-[75vh] rounded-[2.5rem] ${isDark ? '' : 'border-none'} border-2 flex flex-col md:flex-row items-stretch relative overflow-hidden`}
+        className={`${bgColor} w-full h-auto md:h-[var(--card-height)] rounded-[2.5rem] ${isDark ? 'border-zinc-800' : 'border-black/5'} border relative overflow-hidden flex flex-col`}
         style={{
-          // Mathematically perfect stacking height:
-          // By reducing the height by the exact same amount the top is pushed down,
-          // the bottom edge of EVERY card aligns at the exact same pixel!
-          "--card-height": `calc(82vh - ${index * 40}px)`
+          // Taller base height and smaller step offsets allow the cards to fit much more content
+          // while still guaranteeing perfect bottom eclipsing!
+          "--card-height": `calc(88vh - ${index * 24}px)`
         } as React.CSSProperties}
       >
         
-        {/* Left/Top column: Image */}
-        <div className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0 p-4 md:p-8 flex flex-col z-20">
-          <div className="w-full h-full relative rounded-[2rem] overflow-hidden bg-white/50 border border-white/20">
-            <img 
-              src={image} 
-              alt={title || "DaSA Section Image"} 
-              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105 will-change-transform"
-            />
-            {/* Replaced expensive mix-blend-mode with a performant gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
-          </div>
+        {/* Massive Centered Watermark - Pure Pinterest aesthetic */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0">
+          <span className={`text-[250px] md:text-[350px] lg:text-[450px] leading-none ${isDark ? 'text-white' : 'text-black'} opacity-[0.03] ${numFont}`}>
+            {formattedIndex}
+          </span>
         </div>
 
-        {/* Right column: Content */}
-        <div className="w-full md:w-3/5 p-8 md:p-12 lg:p-16 relative z-10 flex flex-col overflow-hidden scrollbar-hide min-h-0">
-          
-          {/* Huge Fun Numbering Typography (Clipped Bottom-Right Graphic) */}
-          <div className="absolute -bottom-8 -right-8 md:-bottom-12 md:-right-12 pointer-events-none select-none z-0 opacity-[0.12]">
-            <span className={`text-[160px] md:text-[220px] lg:text-[280px] ${isDark ? 'text-white' : 'text-black'} leading-none tracking-tighter ${numFont}`}>
-              {formattedIndex}
-            </span>
-          </div>
-          
-          <div className="relative z-10 my-auto pb-8 md:pb-0">
-            {title && (
-              <h2 className={`text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#33312e]'} font-rethink leading-[1.1] mb-6`}>
-                {title}
-              </h2>
-            )}
-            <p className={`text-base md:text-xl text-justify leading-relaxed md:leading-[1.8] ${isDark ? 'text-zinc-300' : 'text-[#33312e]/80'} font-poppins`}>
-              {content}
-            </p>
-          </div>
+        <div className="relative z-10 flex flex-col md:flex-row items-center h-full w-full p-8 md:p-10 lg:p-14 gap-8 lg:gap-12 overflow-hidden min-h-0">
+            
+            {/* TEXT COLUMN */}
+            <div className="w-full md:w-1/2 flex flex-col h-full justify-center">
+              
+              
+              
+              {title && (
+                <h2 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight ${isDark ? 'text-white' : 'text-[#33312e]'} font-rethink leading-[1.05] mb-4 md:mb-6 drop-shadow-sm`}>
+                  {title}
+                </h2>
+              )}
+              
+              <p className={`text-base md:text-lg lg:text-xl leading-relaxed ${isDark ? 'text-zinc-300' : 'text-[#33312e]/80'} font-poppins max-w-lg`}>
+                {content}
+              </p>
+            </div>
+
+            {/* IMAGE COLUMN - The Tilted Editorial Polaroid */}
+            <div className="w-full md:w-1/2 h-full flex items-center justify-center relative mt-10 md:mt-0 pb-10 md:pb-0">
+              
+              <div className=" max-w-sm lg:max-w-md aspect-[4/4] w-2xl relative z-20 transform md:rotate-3 transition-all duration-700   group cursor-pointer">
+                  
+                  {/* Glowing ambient blob behind the image */}
+                  <div className={`absolute -inset-10 -z-10 rounded-full blur-3xl opacity-50 transition-opacity duration-700 group-hover:opacity-80 ${isDark ? 'bg-zinc-700' : 'bg-dasadeep'}`}></div>
+
+                  {/* Physical Photo Frame */}
+                  <div className="absolute inset-0 bg-white shadow-2xl rounded-2xl p-3 pb-16 ring-1 ring-black/5 flex flex-col">
+                      <div className="w-full flex-grow relative rounded-xl overflow-hidden bg-gray-100">
+                          <img 
+                            src={image} 
+                            alt={title || "DaSA Heritage"} 
+                            className="w-full h-full object-cover transition-transform duration-1000 "
+                          />
+                          <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-xl"></div>
+                      </div>
+                      
+                      {/* Photo Caption */}
+                      <div className="absolute bottom-5 left-0 w-full text-center flex justify-center items-center gap-2">
+                        <span className="font-poppins font-semibold text-zinc-400 text-xl">Dagbon Students Association</span>
+                      </div>
+                  </div>
+
+              </div>
+
+            </div>
+
         </div>
-        
       </div>
     </motion.div>
   );
