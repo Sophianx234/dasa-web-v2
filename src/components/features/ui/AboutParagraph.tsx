@@ -37,7 +37,15 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
         willChange: "transform, opacity"
       }}
     >
-      <div className={`${bgColor} w-full md:h-[75vh] rounded-[2.5rem]  ${isDark ? '' : 'border-none'} border-2 flex flex-col md:flex-row items-stretch relative overflow-hidden`}>
+      <div 
+        className={`${bgColor} w-full h-auto md:h-[75vh] rounded-[2.5rem] ${isDark ? '' : 'border-none'} border-2 flex flex-col md:flex-row items-stretch relative overflow-hidden`}
+        style={{
+          // Mathematically perfect stacking height:
+          // By reducing the height by the exact same amount the top is pushed down,
+          // the bottom edge of EVERY card aligns at the exact same pixel!
+          "--card-height": `calc(82vh - ${index * 40}px)`
+        } as React.CSSProperties}
+      >
         
         {/* Left/Top column: Image */}
         <div className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0 p-4 md:p-8 flex flex-col z-20">
