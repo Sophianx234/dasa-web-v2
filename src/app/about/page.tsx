@@ -6,6 +6,7 @@ import ExecutivesSection from "@/components/features/ui/ExecutivesSection";
 import Footer from "@/components/features/ui/Footer";
 import Impact from "@/components/features/ui/Impact";
 import Values from "@/components/features/ui/Values";
+import FeaturesBanner from "@/components/features/ui/FeaturesBanner";
 
 export const metadata = {
   title: "About DaSA - Dagbon Students Association",
@@ -14,10 +15,11 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="text-stone-900 h-dvh scrollbar-hide overflow-x-hidden w-dvw">
+    <div className="text-stone-900 min-h-screen scrollbar-hide w-full">
       <NavigationWrapper />
       <main>
         <AboutHero />
+        <FeaturesBanner/>
         <AboutSection />
         <ExecutivesSection />
         <Impact />

@@ -1,58 +1,58 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { LucideIcon } from "lucide-react";
 
 type AboutParagraphProps = {
   title?: string;
   content: string;
   index: number;
-  icon: LucideIcon | React.ElementType; // Accept a component as a prop
+  total?: number;
+  image: string; 
 };
 
-function AboutParagraph({ title, content, index, icon: Icon }: AboutParagraphProps) {
-  // Format the index to always be two digits (e.g., 01, 02)
+function AboutParagraph({ title, content, index, total = 5, image }: AboutParagraphProps) {
   const formattedIndex = (index + 1).toString().padStart(2, "0");
 
   return (
     <motion.div 
-      initial={{ opacity: 0, x: -30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
-      // pl-10 pushes the text to the right, making room for the timeline node
-      className="relative pl-10 md:pl-14 group pb-12 md:pb-16 last:pb-0"
+      className="sticky w-full origin-top"
+      style={{ 
+        // 40px leaves a very clear, solid strip of the previous card visible
+        top: `calc(15vh + ${index * 40}px)`,
+      }}
     >
-      {/* === TIMELINE NODE / ICON ===
-        Sits exactly on the parent container's left border.
-        -left-[21px] perfectly centers this 40px (w-10) circle on the 2px line.
-      */}
-      <div className="absolute -left-[21px] top-0 w-10 h-10 rounded-full bg-dasalight border-2 border-zinc-400 flex items-center justify-center group-hover:border-dasadeep group-hover:bg-white group-hover:scale-110 transition-all duration-500 z-10 shadow-sm">
-        <Icon className="w-4 h-4 text-zinc-400 group-hover:text-dasadeep transition-colors duration-300" />
-      </div>
+      <div className="bg-white w-full md:h-[75vh] rounded-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.08)] border border-gray-100 flex flex-col md:flex-row items-stretch relative overflow-hidden transition-all duration-500">
+        
+        {/* Left/Top column: Image (Now contained in a framed container) */}
+        <div className="w-full md:w-2/5 h-64 md:h-auto relative shrink-0 p-4 md:p-8 flex flex-col">
+          <div className="w-full h-full relative rounded-[2rem] overflow-hidden bg-gray-50 shadow-inner">
+            <img 
+              src={image} 
+              alt={title || "DaSA Section Image"} 
+              className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/5 mix-blend-overlay"></div>
+          </div>
+        </div>
 
-      {/* === CONTENT === */}
-      <div className="relative z-10 -mt-1.5">
-        {title ? (
-          <div className="mb-4">
-            <span className="block text-dasadeep font-mono text-xs md:text-sm tracking-widest mb-2 font-semibold uppercase transition-transform duration-300 group-hover:translate-x-1">
-              {formattedIndex} &mdash;
+        {/* Right column: Content */}
+        <div className="w-full md:w-3/5 p-8 md:p-12 lg:p-16 relative z-10 flex flex-col justify-center bg-white overflow-y-auto scrollbar-hide">
+          <div className="mb-6 flex items-center gap-4">
+            <span className="text-dasadeep font-mono text-xs md:text-sm tracking-widest font-bold uppercase border border-dasadeep/20 px-4 py-1.5 rounded-full bg-dasalight/30 shadow-sm">
+              {formattedIndex} / {total.toString().padStart(2, "0")}
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#33312e] font-rethink leading-snug">
+          </div>
+          
+          {title && (
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-[#33312e] font-rethink leading-tight mb-6">
               {title}
             </h2>
-          </div>
-        ) : (
-          <div className="mb-3">
-            <span className="block text-dasadeep font-mono text-xs md:text-sm tracking-widest font-semibold uppercase transition-transform duration-300 group-hover:translate-x-1">
-              {formattedIndex} &mdash;
-            </span>
-          </div>
-        )}
-
-        <p className="text-base md:text-lg leading-relaxed md:leading-[1.8] text-[#33312e]/75 font-poppins sm:text-justify md:text-left transition-colors duration-300 group-hover:text-[#33312e]/90">
-          {content}
-        </p>
+          )}
+          <p className="text-base md:text-lg leading-relaxed md:leading-[1.8] text-[#33312e]/75 font-poppins">
+            {content}
+          </p>
+        </div>
+        
       </div>
     </motion.div>
   );
