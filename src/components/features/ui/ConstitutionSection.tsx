@@ -58,23 +58,28 @@ export default function ConstitutionSection() {
         </motion.div>
 
         {/* === RIGHT COLUMN: IMAGE & ACCENTS === */}
-        <motion.div 
+         <motion.div 
           initial={{ opacity: 0, scale: 0.95, x: 20 }}
           whileInView={{ opacity: 1, scale: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-5 lg:col-start-8 relative"
         >
-          <div className="relative w-full max-w-md mx-auto aspect-[4/5] md:aspect-square lg:aspect-[4/5]">
+          {/* 
+            By removing the forced aspect ratio and absolute inset, 
+            the container perfectly wraps the image. object-contain now 
+            scales it naturally without leaving empty bordered space.
+          */}
+          <div className="relative w-full max-w-[280px] lg:max-w-sm mx-auto z-10 group">
             
-            {/* Offset Decorative Frame */}
-            <div className="absolute inset-0 translate-x-6 translate-y-6 md:translate-x-8 md:translate-y-8 rounded-3xl border-2 border-[#33312e]/10 z-0"></div>
+            {/* Offset Decorative Frame perfectly matching the image size */}
+            <div className="absolute inset-0 translate-x-6 translate-y-6 md:translate-x-8 md:translate-y-8 rounded-[2rem] border-2 border-[#161412]/10 z-0 transition-transform duration-500  "></div>
             
             {/* Main Image */}
             <img
               src="https://i.ibb.co/nqZ0QJYf/winners-brain-Made-with-Poster-My-Wall.jpg"
               alt="DaSA Constitution Cover"
-              className="absolute inset-0 w-full h-full object-cover rounded-3xl shadow-2xl z-10"
+              className="relative w-full h-auto object-contain rounded-[2rem] shadow-2xl z-10"
             />
 
             {/* Floating Glassmorphism Badge */}
@@ -83,18 +88,18 @@ export default function ConstitutionSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="absolute -bottom-6 -left-6 md:-bottom-8 md:-left-10 z-20 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl flex items-center gap-4 border border-white"
+              className="absolute -bottom-8 -left-8 md:-bottom-10 md:-left-12 z-20 bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-xl flex items-center gap-5 border border-white"
             >
-              <div className="w-12 h-12 bg-[#f9f7f4] rounded-full flex items-center justify-center border border-[#33312e]/5">
-                <span className="font-rethink font-bold text-[#33312e] text-sm tracking-widest">
+              <div className="w-14 h-14 bg-[#f9f7f4] rounded-full flex items-center justify-center border border-[#161412]/5">
+                <span className="font-rethink font-black text-[#161412] text-lg tracking-widest">
                   UG
                 </span>
               </div>
               <div>
-                <p className="text-sm font-extrabold text-[#33312e] font-rethink tracking-wide">
+                <p className="text-sm font-extrabold text-[#161412] font-rethink tracking-wide">
                   Established
                 </p>
-                <p className="text-xs text-[#595652] font-poppins mt-0.5">
+                <p className="text-xs text-[#5c5955] font-poppins mt-1">
                   Student Constitution
                 </p>
               </div>

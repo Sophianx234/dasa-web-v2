@@ -303,7 +303,7 @@ function ExecutivesSection() {
                         {/* Caption */}
                         {caption && (
                           <p className="text-dasadeep font-mono text-sm tracking-widest uppercase font-semibold mb-8">
-                            {caption} &mdash;
+                            {caption} 
                           </p>
                         )}
 
