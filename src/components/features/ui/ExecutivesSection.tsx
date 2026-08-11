@@ -168,18 +168,12 @@ function ExecutivesSection() {
   const currentExecutives = regimesData[selectedRegime];
 
   return (
-    <section className="w-full bg-[#fef4e9]/30 relative overflow-hidden py-24 md:py-32">
+    <section className="w-full bg-[#fef4e9]/30 relative overflow-hidden ">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* === HEADER === */}
         <div className="mb-16 md:mb-24 max-w-4xl">
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "80px" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="h-1.5 bg-dasadeep/60 mb-8 rounded-full"
-          />
+          
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -201,27 +195,31 @@ function ExecutivesSection() {
           </motion.p>
         </div>
 
-        {/* === REGIME SELECTOR === */}
-        <div className="flex justify-start lg:justify-center mb-16 md:mb-24 overflow-x-auto pb-4 scrollbar-hide">
-          <div className="inline-flex gap-2 bg-[#33312e]/[0.03] p-1.5 md:p-2 rounded-2xl border border-[#33312e]/5 whitespace-nowrap">
+        {/* === REGIME SELECTOR (Ultra-Chic Borderless Design) === */}
+        <div className="flex justify-start lg:justify-center mb-16 md:mb-24 overflow-x-auto scrollbar-hide">
+          <div className="inline-flex gap-8 md:gap-14 pb-2 px-2 whitespace-nowrap">
             {regimes.map(regime => {
               const isActive = selectedRegime === regime;
               return (
                 <button
                   key={regime}
                   onClick={() => setSelectedRegime(regime as keyof typeof regimesData)}
-                  className={`relative px-6 md:px-8 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-semibold font-poppins transition-colors duration-300 outline-none ${
-                    isActive ? "text-[#33312e]" : "text-[#33312e]/50 hover:text-[#33312e]/80"
+                  className={`relative py-3 group flex flex-col items-center justify-center text-xl md:text-3xl font-rethink tracking-tight transition-all duration-500 outline-none ${
+                    isActive ? "font-extrabold text-[#33312e] scale-105" : "font-medium text-zinc-400 hover:text-[#33312e]/70"
                   }`}
                 >
-                  {isActive && (
+                  {regime}
+                  
+                  {/* Chic Sliding Underline Indicator */}
+                  {isActive ? (
                     <motion.div
                       layoutId="activeRegime"
-                      className="absolute inset-0 bg-white rounded-xl shadow-[0_2px_10px_rgb(0,0,0,0.04)] border border-[#33312e]/5"
-                      transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
+                      className="absolute -bottom-1 left-0 right-0 h-[4px] bg-[#33312e] rounded-full"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
+                  ) : (
+                    <div className="absolute -bottom-1 left-1/2 right-1/2 h-[4px] bg-zinc-200 rounded-full group-hover:left-0 group-hover:right-0 transition-all duration-300 opacity-0 group-hover:opacity-100" />
                   )}
-                  <span className="relative z-10">{regime}</span>
                 </button>
               );
             })}
