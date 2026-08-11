@@ -1,4 +1,5 @@
 import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
+import AboutHero from "@/components/features/ui/AboutHero";
 import AboutSection from "@/components/features/ui/AboutSection";
 import ConstitutionSection from "@/components/features/ui/ConstitutionSection";
 import ExecutivesSection from "@/components/features/ui/ExecutivesSection";
@@ -16,6 +17,7 @@ export default function AboutPage() {
     <div className="text-stone-900 h-dvh scrollbar-hide overflow-x-hidden w-dvw">
       <NavigationWrapper />
       <main>
+        <AboutHero />
         <AboutSection />
         <ExecutivesSection />
         <Impact />
