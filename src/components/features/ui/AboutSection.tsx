@@ -7,7 +7,7 @@ import SVGLite from "./SVGLite";
 // Abstracted content with beautiful images assigned to each chapter
 const aboutContent = [
   {
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop",
+    image: "https://i.ibb.co/ZYYBhpm/photo-48-2024-10-31-06-50-45.jpg",
     bgColor: "bg-[#33312e]",
     isDark: true,
     numFont: "font-chewy",
@@ -15,14 +15,14 @@ const aboutContent = [
     content: "The Dagbon Students Association (DaSA), University of Ghana branch is a vibrant community that brings together students from Dagbon and beyond to celebrate our rich heritage, foster unity, and empower academic and personal growth. This association serves as a proud platform for celebrating the rich cultural heritage, values, and traditions of Dagbon while fostering a sense of unity, leadership, and academic excellence among members.",
   },
   {
-    image: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2049&auto=format&fit=crop",
+    image: "https://i.ibb.co/k5mrwS0/photo-81-2024-10-31-06-52-36.jpg",
     bgColor: "bg-[#fef4e9]",
     numFont: "font-lobster",
-    title: "Commitment to Building a Welcoming Environment.",
+    title: "Building a Welcoming Environment.",
     content: "DaSA is committed to building a welcoming environment where students can connect, share ideas, create lifelong friendships, and access meaningful opportunities. Through a range of initiatives, including academic workshops, leadership development programs, cultural festivals, networking events, and social impact projects, we empower our members both within and beyond the university setting.",
   },
   {
-    image: "https://images.unsplash.com/photo-1593113580332-628d5259a4bb?q=80&w=2070&auto=format&fit=crop",
+    image: "https://i.ibb.co/bQ4S445/photo-53-2024-10-31-06-52-36.jpg",
     bgColor: "bg-[#33312e]",
     isDark: true,
     numFont: "font-quicksand text-4xl font-black",
@@ -30,14 +30,14 @@ const aboutContent = [
     content: "Beyond campus life, DaSA is deeply committed to making Dagbon a better place. We actively reach out to underserved communities across Dagbon, striving to uplift lives through insightful initiatives, educational support, empowerment programs, and community-driven development projects. We believe in giving back, bridging gaps, and building a stronger future for our people.",
   },
   {
-    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop",
+    image: "https://i.ibb.co/WKGpcf0/photo-62-2024-10-31-06-52-36.jpg",
     bgColor: "bg-[#fef4e9]",
     numFont: "font-chewy",
     title: "Prioritizing Personal Growth and Well-being.",
     content: "We also prioritize the personal growth and well-being of our community, promoting mentorship, innovation, entrepreneurship, and civic responsibility. By embracing diversity and inclusivity, DaSA encourages members from all backgrounds to participate, contribute, and thrive.",
   },
   {
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
+    image: "https://i.ibb.co/GWTnM6K/photo-4-2024-10-31-06-53-18.jpg",
     bgColor: "bg-[#33312e]",
     isDark: true,
     numFont: "font-lobster",
@@ -73,8 +73,8 @@ function AboutSection() {
           </header>
 
           {/* === STACKING CARDS LIST === */}
-          <div className="w-full max-w-7xl mx-auto pb-[50vh]">
-            <div className="flex flex-col gap-[80vh] relative w-full z-20">
+          <div className="w-full max-w-7xl mx-auto pb-12 md:pb-24">
+            <div className="flex flex-col gap-24 md:gap-32 relative w-full z-20">
               {aboutContent.map((item, index) => (
                 <AboutParagraph 
                   key={index}
@@ -97,9 +97,9 @@ function AboutSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 1 }}
-            className="flex justify-center mt-20 pt-10 border-t border-gray-200/60"
+            className="flex justify-center  mt-20 pt-10 md:mt-4 md:pt-1 border-t border-gray-200/60"
           >
-            <div className="opacity-50 sm:hidden block hover:opacity-100 transition-opacity duration-300">
+            <div className="opacity-50 sm:hidden block  hover:opacity-100 transition-opacity duration-300">
                <SVGLite type="sticks" />
             </div>
           </motion.div>
