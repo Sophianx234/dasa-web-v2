@@ -14,7 +14,7 @@ const regimesData = {
       desc: "True leadership is about service and the courage to pave a path where none existed. My goal is to build an association that not only celebrates our rich heritage but also champions academic excellence and personal growth. Together we can create an inclusive environment that brings out the absolute best in every single member.",
     },
     {
-      img: "https://i.ibb.co/nqJVvqvB/e-2.jpg",
+      img: "https://i.ibb.co/NdWWMptJ/e-2.jpg",
       role: "Vice President",
       name: "Abdul Aziz Mujahid",
       desc: "Support and collaboration are the twin pillars of any thriving community. I am deeply committed to working alongside our members to turn our shared visions into reality. By listening to your ideas and standing together we will unlock new opportunities that elevate the entire student body.",
@@ -26,7 +26,7 @@ const regimesData = {
       desc: "Efficiency in our administrative duties ensures we never miss a step. I work closely with the secretariat to keep our processes streamlined and our communications crystal clear. It is an honor to serve behind the scenes so that our association can continue moving forward smoothly.",
     },
     {
-      img: "https://i.ibb.co/mVx0MNB4/photo-2026-08-10-22-34-52.jpg",
+      img: "https://i.ibb.co/rGhM38DF/photo-2026-08-10-22-34-52.jpg",
       role: "Financial Secretary",
       name: "Mohammed Falilu Mustapha",
       desc: "Sound financial management is the bedrock upon which our dreams are built. I take pride in safeguarding our resources and ensuring that every pesewa is allocated towards initiatives that bring real value. Trust and accountability drive every financial decision we make.",
@@ -38,32 +38,32 @@ const regimesData = {
       desc: "Building a supportive network for our young women requires dedication and empathy. I actively champion initiatives that foster sisterhood and academic success among our female members. Every girl deserves a space where her voice is respected and her potential is nurtured.",
     },
     {
-      img: "https://i.ibb.co/67t0RLrn/photo-2026-08-10-22-35-04.jpg",
+      img: "https://i.ibb.co/WpWnvQvy/photo-2026-08-10-22-35-04.jpg",
       role: "Chief",
       name: "DaSA Chief",
       desc: "Our culture is our identity and preserving it is the greatest responsibility we hold. As Chief my role is to guide our association with the wisdom of our elders ensuring that our rich traditions remain the foundation of everything we do.",
     },
     {
-      img: "https://i.ibb.co/p6xdnMb1/e-8.jpg",
+      img: "https://i.ibb.co/HDKCJ5hn/e-8.jpg",
       role: "Women Commissioner (WOCOM)",
       name: "Yussif Mandeeya Tolha",
       desc: "Empowering the women in our community is an absolute priority. I am dedicated to creating platforms that support mentorship leadership and personal development for every female student. When we uplift our women we uplift the entire generation.",
     },
 
     {
-      img: "https://i.ibb.co/wFttFkq1/e-4.jpg",
+      img: "https://i.ibb.co/23Rq5HnB/e-4.jpg",
       role: "General Secretary",
       name: "Alhassan Abdul Kadir",
       desc: "The heartbeat of any organization lies in its administration and clear communication. I ensure that our records are meticulous and our operations run seamlessly. My dedication is to transparency and ensuring that every voice in our association is accurately documented and heard.",
     },
     {
-      img: "https://i.ibb.co/3YVPJNKX/e-5.jpg",
+      img: "https://i.ibb.co/wZ3SdYx2/e-5.jpg",
       role: "Deputy Financial Secretary",
       name: "Salifu Asana",
       desc: "Protecting our association's future requires careful planning and strategic oversight today. I assist in maintaining absolute transparency in our financial dealings so we can fund the projects that matter most. Financial integrity is a commitment I hold very dearly.",
     },
     {
-      img: "https://i.ibb.co/fzTL4Cjg/e-6.jpg",
+      img: "https://i.ibb.co/0RVsHLfy/e-6.jpg",
       role: "Public Relations Officer (PRO)",
       name: "Osman Umar Farouk",
       desc: "Our story is powerful and it deserves to be told with passion. I manage how we interact with the rest of the world ensuring our achievements and culture shine brightly. Effective communication is the bridge that connects us to opportunities and builds our public image.",
@@ -168,7 +168,7 @@ function ExecutivesSection() {
   const currentExecutives = regimesData[selectedRegime];
 
   return (
-    <section className="w-full bg-[#fef4e9]/30 relative overflow-hidden ">
+    <section className="w-full bg-[#fef4e9]/30 relative pb-12 overflow-hidden ">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* === HEADER === */}

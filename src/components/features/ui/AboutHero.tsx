@@ -68,14 +68,7 @@ export default function AboutHero() {
             Our Story. <br />
             <span className="text-white">Our Heritage.</span>
           </motion.h1>
-          <motion.p
-             className="text-white/80 font-poppins text-center mt-6 text-base sm:text-lg max-w-2xl"
-             initial={{ y: 30, opacity: 0 }}
-             animate={{ y: 0, opacity: 1 }}
-             transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
-          >
-            Discover the legacy, mission, and vibrant community that drives the Dagbon Students Association forward.
-          </motion.p>
+          
         </div>
       </motion.div>
 

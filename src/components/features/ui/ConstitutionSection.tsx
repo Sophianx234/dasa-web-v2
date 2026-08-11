@@ -23,13 +23,7 @@ export default function ConstitutionSection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-6 flex flex-col justify-center"
         >
-          {/* Structural Line & Label */}
-          <div className="flex items-center gap-4 mb-6 md:mb-8">
-            <div className="h-[2px] w-12 bg-dasadeep rounded-full"></div>
-            <span className="font-mono text-sm tracking-[0.2em] text-dasadeep font-bold uppercase">
-              Official Document
-            </span>
-          </div>
+         
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#33312e] font-rethink leading-[1.05] tracking-tighter mb-6">
             The Foundation <br className="hidden md:block" /> of Our Unity.

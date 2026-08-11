@@ -49,15 +49,10 @@ export default function Impact() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="mb-12 lg:mb-16"
           >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-1 bg-[#33312e] rounded-full"></div>
-              <span className="text-[#33312e] font-mono text-sm tracking-widest font-bold uppercase">
-                Our Global Reach
-              </span>
-            </div>
+            
             
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-rethink font-extrabold text-[#33312e] leading-[1.1] tracking-tight">
-              Impact in <br className="hidden md:block" /> Numbers.
+              Our Impact in <br className="hidden md:block" /> Numbers.
             </h2>
             <p className="text-[#33312e]/75 font-poppins text-lg mt-6 max-w-lg leading-relaxed">
               We are rapidly growing our network, fostering communication, and building a stronger, more united Dagbon student community across the globe.
