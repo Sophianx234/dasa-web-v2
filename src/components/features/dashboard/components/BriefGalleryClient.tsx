@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { mediaType } from "@/services/apiServices";
 import { shuffleArray } from "@/components/features/utils/helpers";
@@ -16,65 +16,32 @@ export type BriefGalleryProps = {
 
 function BriefGalleryClient({ style, initialImages = [] }: BriefGalleryProps) {
   const [page, setPage] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [images, setImages] = useState<mediaType[]>(initialImages);
+  const [isPending, startTransition] = useTransition();
 
-  const loadImgs = useCallback(
-    async (pageNumber: number) => {
-      if (!hasMore || isLoading) return;
+  const handleLoadMore = () => {
+    if (!hasMore || isPending) return;
 
+    startTransition(async () => {
       try {
-        setIsLoading(true);
-        // Call Server Action
-        const data = await getGalleryAction(pageNumber, 12);
-        
+        const next = page + 1;
+        const data = await getGalleryAction(next, 24);
         const imgs = data.images || [];
-        const numImages = data.numImages || 0;
 
-        if (imgs.length === 0 || numImages === 0) {
+        if (imgs.length === 0) {
           setHasMore(false);
         } else {
-          // If page > 1, append images, else replace them
-          setImages((prevImages) =>
-            pageNumber === 1 ? imgs : [...prevImages, ...imgs],
-          );
+          setImages((prevImages) => [...prevImages, ...imgs]);
+          setPage(next);
+          if (imgs.length < 24) setHasMore(false);
         }
       } catch (error) {
         console.error("Error fetching gallery images:", error);
         setHasMore(false);
-      } finally {
-        setIsLoading(false);
       }
-    },
-    [hasMore, isLoading],
-  );
-
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  const loaderRefCallback = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (isLoading) return;
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage((prevPage) => prevPage + 1);
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [isLoading, hasMore],
-  );
-
-  useEffect(() => {
-    // We already have page 1 from initialImages, so only fetch when page > 1
-    // or if we switch styles dynamically (unlikely but good practice)
-    if (style !== "overview" && page > 1) {
-      loadImgs(page);
-    }
-  }, [page, style, loadImgs]);
+    });
+  };
 
   return (
     <motion.div
@@ -98,8 +65,17 @@ function BriefGalleryClient({ style, initialImages = [] }: BriefGalleryProps) {
             {images && images.length > 0 && <ImageViewer images={images} />}
           </div>
 
-          <div ref={loaderRefCallback} className="w-full mt-4">
-            {isLoading && <GallerySkeleton />}
+          <div className="w-full mt-8 flex justify-center">
+            {isPending && <GallerySkeleton />}
+            {!isPending && hasMore && images.length > 0 && (
+              <button
+                onClick={handleLoadMore}
+                disabled={isPending}
+                className="bg-[#33312e] text-white px-8 py-3 font-semibold font-poppins rounded-full hover:bg-black transition-colors disabled:opacity-50"
+              >
+                Load More
+              </button>
+            )}
           </div>
 
           {!hasMore && images && images.length > 0 && (

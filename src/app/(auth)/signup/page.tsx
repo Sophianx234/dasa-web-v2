@@ -81,9 +81,9 @@ export default function SignupPage() {
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.4, ease: "easeOut" as any },
     },
-    exit: { opacity: 0, x: -20, transition: { duration: 0.3, ease: "easeIn" } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3, ease: "easeIn" as any } },
   };
 
   const inputStyle =

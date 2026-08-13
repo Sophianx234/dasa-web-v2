@@ -10,9 +10,10 @@ import Swal from 'sweetalert2';
 export type imageViewerProps = {
   images: mediaType[];
   type?: 'normal' | 'control';
+  masonry?: boolean;
 };
 
-function ImageViewer({ images, type = 'normal' }: imageViewerProps) {
+function ImageViewer({ images, type = 'normal', masonry = true }: imageViewerProps) {
   const { handleRemoveImage } = useDeleteImage();
 
   const handleDelete = async (imageId: string) => {
@@ -41,12 +42,11 @@ function ImageViewer({ images, type = 'normal' }: imageViewerProps) {
       {/* CSS Columns create the Unsplash Masonry effect.
         2 columns on mobile, 3 on md screens, 4 on lg screens. 
       */}
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 mx-3 space-y-4">
+      <div className={masonry ? "columns-2 md:columns-3 lg:columns-4 gap-4 mx-3 space-y-4" : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-3"}>
         {images.map((item: mediaType, index) => (
           <div 
             key={item._id} 
-            // break-inside-avoid prevents images from being split across columns
-            className="relative break-inside-avoid group cursor-pointer"
+            className={`relative group cursor-pointer ${masonry ? 'break-inside-avoid' : ''}`}
           >
             {/* Elegant control button: hidden by default, slides/fades in on hover */}
             {type === 'control' && (
@@ -69,8 +69,7 @@ function ImageViewer({ images, type = 'normal' }: imageViewerProps) {
                     effect="blur"
                     src={item.secure_url}
                     alt="Gallery item"
-                    // w-full and h-auto allows the image to scale naturally based on its native aspect ratio
-                    className="w-full h-auto object-cover transform transition-transform duration-700 scale-105"
+                    className={`w-full object-cover transform transition-transform duration-700 scale-105 ${masonry ? 'h-auto' : 'aspect-square'}`}
                     // CRITICAL: react-lazy-load adds a span wrapper. It must be display: block to prevent layout bugs
                     wrapperClassName="w-full block" 
                   />

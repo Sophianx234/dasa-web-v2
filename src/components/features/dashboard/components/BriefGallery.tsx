@@ -182,7 +182,7 @@ export default async function BriefGallery({ style }: { style: "overview" | "sid
     initialImages = shuffleArray([...fallbackImageLinks], 3) as mediaType[];
   } else {
     // For other pages, fetch from API
-    const data = await getGalleryAction(1, 12);
+    const data = await getGalleryAction(1, 24);
     initialImages = data?.images || [];
   }
   

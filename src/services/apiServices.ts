@@ -1,277 +1,132 @@
 import { eventI } from "@/components/features/dashboard/components/Events";
 import { resetPassFormValues } from "@/app/reset-password/[token]/page";
-import axios from "axios";
+import * as apiActions from "@/app/actions/apiActions";
+import { getGalleryAction, getVideosAction, uploadMediaAction } from "@/app/actions";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://dasa-api.onrender.com/api/v1";
 const getToken = () => typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-// const token = localStorage.getItem("token");
-//         const { data, status } = await axios.get("/api/get_contacts_list", {
-//           headers: { Authorization: `Bearer ${getToken()}` },
-//         });
-export type messagesType = {
-  content: string;
-  userId: string;
-};
-export type anonymousType = {
-  name: string;
-  members: string[];
-  messages: messagesType[];
-};
-export type anonymousResponse = {
-  status: string;
-  anonymous: anonymousType;
-};
-export type LoginCredentials = {
-  email: string;
-  password: string;
-};
+// Types...
+export type messagesType = { content: string; userId: string; };
+export type anonymousType = { name: string; members: string[]; messages: messagesType[]; };
+export type anonymousResponse = { status: string; anonymous: anonymousType; };
+export type LoginCredentials = { email: string; password: string; };
+export type errorType = { status: string; error: { statusCode: number; status: "fail"; operational: boolean; }; message: string; };
+export type dmType = { sender: signupCredentialsExtended; recipient: signupCredentialsExtended; messageType: "text" | "file"; content: string; _id: string; createdAt: string; fileURL: string; };
+export type directMessageType = { messages: dmType[]; };
+export type LoginResponse = { token: string; user: { id: string; name: string; email: string; }; };
+export type signupCredentials = { firstName: string; lastName: string; email: string; password: string; contact: string; hall?: string; course?: string; confirmPassword?: string | boolean | null; };
+export type signupCredentialsExtended = signupCredentials & { username: string; profileImage: string; _id: string; anonymousName: string; anonymousProfile: string; sex: "male" | "female"; role: string; };
+export type logoutResponse = { status: string; };
+export type userType = { status: string; user: signupCredentialsExtended; };
+export type mediaType = { _id: string; asset_id: string; public_id: string; version: number; version_id: string; signature: string; width: number; height: number; format: string; resource_type: string; created_at: Date; tags: string[]; bytes: number; type: string; etag: string; placeholder: boolean; url: string; secure_url: string; asset_folder: string; display_name: string; original_filename: string; uploadedAt: Date; };
+export type getGalleryResponse = { status: string; numImages: number; images: mediaType[]; };
 
-export type errorType = {
-  status: string;
-  error: {
-    statusCode: number;
-    status: "fail";
-    operational: boolean;
-  };
-  message: string;
-};
-
-export type dmType = {
-  sender: signupCredentialsExtended;
-  recipient: signupCredentialsExtended;
-  messageType: "text" | "file";
-  content: string;
-  _id: string;
-  createdAt: string;
-  fileURL: string;
-};
-export type directMessageType = {
-  messages: dmType[];
-};
-
-export type LoginResponse = {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-};
-export type signupCredentials = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  contact: string;
-  hall?: string;
-  course?: string;
-
-  confirmPassword?: string | boolean | null;
-};
-export type signupCredentialsExtended = signupCredentials & {
-  username: string;
-  profileImage: string;
-  _id: string;
-  anonymousName: string;
-  anonymousProfile: string;
-  sex: "male" | "female";
-  role: string;
-};
-export type logoutResponse = {
-  status: string;
-};
-export type userType = {
-  status: string;
-  user: signupCredentialsExtended;
-};
-
-export type mediaType = {
-  _id: string;
-  asset_id: string;
-  public_id: string;
-  version: number;
-  version_id: string;
-  signature: string;
-  width: number;
-  height: number;
-  format: string;
-  resource_type: string;
-  created_at: Date;
-  tags: string[];
-  bytes: number;
-  type: string;
-  etag: string;
-  placeholder: boolean;
-  url: string;
-  secure_url: string;
-  asset_folder: string;
-  display_name: string;
-  original_filename: string;
-  uploadedAt: Date;
-};
-export type getGalleryResponse = {
-  status: string;
-  numImages: number;
-  images: mediaType[];
-};
-
-export async function login(creds: LoginCredentials): Promise<LoginResponse> {
-  const { data } = await axios.post(`${API_URL}/users/login`, creds);
-  return data;
+export async function login(creds: LoginCredentials): Promise<any> {
+  return await apiActions.loginAction(creds);
 }
 
-export async function logout(): Promise<logoutResponse> {
-  const { data } = await axios.post(`${API_URL}/users/logout`);
-  return data;
+export async function logout(): Promise<any> {
+  return await apiActions.logoutAction();
 }
 
-export async function signup(userInfo: signupCredentials){
-
-    const { data } = await axios.post(`${API_URL}/users/signup`, userInfo);
-    return data;
-  
+export async function signup(userInfo: signupCredentials) {
+  return await apiActions.signupAction(userInfo);
 }
 
-export async function getUser(): Promise<userType> {
-  const { data } = await axios.get(`${API_URL}/users/getme`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  console.log("Data:", data); // Process the data
-
-  return data;
-}
-export async function forgotPassword(email:string): Promise<userType> {
-  const { data } = await axios.post(`${API_URL}/users/forgot-password`,{email});
-  console.log("Data:", data); // Process the data
-
-  return data;
+export async function getUser(): Promise<any> {
+  return await apiActions.getUserAction(getToken() || "");
 }
 
-type resetPasswordType = {
-  token:string;
-  body: resetPassFormValues
+export async function forgotPassword(email: string): Promise<any> {
+  return await apiActions.forgotPasswordAction(email);
 }
-export async function resetPassword({token,body}:resetPasswordType): Promise<userType> {
-  const { data } = await axios.patch(`${API_URL}/users/reset-password/:${token}`,{password:body.pass,confirmPassword:body.confirmPass});
-  console.log("Data:", data); // Process the data
 
-  return data;
+type resetPasswordType = { token: string; body: resetPassFormValues }
+export async function resetPassword({ token, body }: resetPasswordType): Promise<any> {
+  return await apiActions.resetPasswordAction(token, body);
 }
 
 export async function getUsers() {
-  const { data } = await axios.get(`${API_URL}/users`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+  return await apiActions.getUsersAction(getToken() || "");
 }
-export async function getAnonymous(lim:number|null = null): Promise<anonymousResponse> {
-  const { data } = await axios.get(
-    `${API_URL}/messages/anonymous?field=messages&${lim?`limit=${lim}`:''}`,{headers: { Authorization: `Bearer ${getToken()}` }}
-  );
-  return data;
+
+export async function getAnonymous(lim: number | null = null): Promise<any> {
+  return await apiActions.getAnonymousAction(getToken() || "", lim);
 }
-export async function updateUser(update: unknown): Promise<unknown[]> {
-  console.log(update);
-  const { data } = await axios.patch(`${API_URL}/users/update-user`, update,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+
+export async function updateUser(update: unknown): Promise<any> {
+  return await apiActions.updateUserAction(getToken() || "", update);
 }
-export async function changeProfile(update: unknown): Promise<unknown[]> {
-  console.log(update);
-  const { data } = await axios.patch(`${API_URL}/users/upload`, update,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+
+export async function changeProfile(update: unknown): Promise<any> {
+  return await apiActions.changeProfileAction(getToken() || "", update);
 }
+
 export async function getGallery() {
-  const { data } = await axios.get(
-    `${API_URL}/media/images?field=_id,secure_url,public_id,format,created_at`,{headers: { Authorization: `Bearer ${getToken()}` }}
-  );
-  return data;
+  return await getGalleryAction();
 }
 
 export async function getVideos() {
-  const { data } = await axios.get(
-    `${API_URL}/media/videos?field=_id,secure_url,public_id,format`,{headers: { Authorization: `Bearer ${getToken()}` }}
-  );
-  return data;
+  return await getVideosAction();
 }
+
 export async function getAnnouncements() {
-  const { data } = await axios.get(`${API_URL}/announcements`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+  return await apiActions.getAnnouncementsAction(getToken() || "");
 }
-export interface announcementI {
-  _id:string
-  announcer: string;
-  announcerProfile: string;
-  portfolio: string;
-  date: Date|string;
-  messageType: string;
-  title: string;
-  content: string;
-  reactions: number;
-  comments: string[];
-}
-export type newAnnouncementI = Omit<announcementI,'_id'|'reactions'|'comments'>
-export interface announcementResponse {
-  announcements: announcementI[]
 
-}
-export type updateAnnouncementI = {
-  id: string;
-  body: announcementI;
-};
+export interface announcementI { _id: string; announcer: string; announcerProfile: string; portfolio: string; date: Date | string; messageType: string; title: string; content: string; reactions: number; comments: string[]; }
+export type newAnnouncementI = Omit<announcementI, '_id' | 'reactions' | 'comments'>
+export interface announcementResponse { announcements: announcementI[] }
+export type updateAnnouncementI = { id: string; body: announcementI; };
+
 export async function updateAnnouncement({ id, body }: updateAnnouncementI) {
-  const { data } = await axios.patch(`${API_URL}/announcements/${id}`, body,{headers: { Authorization: `Bearer ${getToken()}` }} );
-  return data;
-}
-export async function deleteAnnouncement(id:string) {
-  const { data } = await axios.delete(`${API_URL}/announcements/${id}`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
-}
-export async function createAnnouncement(body:newAnnouncementI) {
-  const { data } = await axios.post(`${API_URL}/announcements`, body,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+  return await apiActions.updateAnnouncementAction(getToken() || "", id, body);
 }
 
-export async function uploadImages(update: unknown): Promise<unknown[]> {
-  console.log(update);
-  const { data } = await axios.post(`${API_URL}/media/upload`, update,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+export async function deleteAnnouncement(id: string) {
+  return await apiActions.deleteAnnouncementAction(getToken() || "", id);
 }
-export async function removeImage(imageId: unknown): Promise<unknown[]> {
-  const { data } = await axios.delete(`${API_URL}/media/${imageId}`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+
+export async function createAnnouncement(body: newAnnouncementI) {
+  return await apiActions.createAnnouncementAction(getToken() || "", body);
 }
+
+export async function uploadImages(update: FormData): Promise<any> {
+  // Pass FormData to uploadMediaAction
+  return await uploadMediaAction(update);
+}
+
+export async function removeImage(imageId: string): Promise<any> {
+  return await apiActions.removeImageAction(getToken() || "", imageId);
+}
+
 export async function removeUser(id: string) {
-  const { data } = await axios.delete(`${API_URL}/users/${id}`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
-}
-type changeRoleI = {
-  id: string;
-  role: string;
-};
-export async function changeUserRole({ id, role }: changeRoleI) {
-  console.log("role:", role);
-  const { data } = await axios.patch(`${API_URL}/users/${id}`, { role },{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
-}
-export async function getEvents() {
-  const { data } = await axios.get(`${API_URL}/events`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
-}
-export async function getNotifications() {
-  const { data } = await axios.get(`${API_URL}/notifications`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
-}
-export async function removeEvent(id: string) {
-  const { data } = await axios.delete(`${API_URL}/events/${id}`,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+  return await apiActions.removeUserAction(getToken() || "", id);
 }
 
-export type updateEventI = {
-  id: string;
-  body: eventI;
-};
-export async function updateEvent({ id, body }: updateEventI) {
-  const { data } = await axios.patch(`${API_URL}/events/${id}`, body,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+type changeRoleI = { id: string; role: string; };
+export async function changeUserRole({ id, role }: changeRoleI) {
+  return await apiActions.changeUserRoleAction(getToken() || "", id, role);
 }
-export async function createEvent(body: FormData) {
-  const { data } = await axios.post(`${API_URL}/events`, body,{headers: { Authorization: `Bearer ${getToken()}` }});
-  return data;
+
+export async function getEvents() {
+  return await apiActions.getEventsAction(getToken() || "");
+}
+
+export async function getNotifications() {
+  return await apiActions.getNotificationsAction(getToken() || "");
+}
+
+export async function removeEvent(id: string) {
+  return await apiActions.removeEventAction(getToken() || "", id);
+}
+
+export type updateEventI = { id: string; body: eventI; };
+export async function updateEvent({ id, body }: updateEventI) {
+  return await apiActions.updateEventAction(getToken() || "", id, body);
+}
+
+export async function createEvent(body: any) {
+  return await apiActions.createEventAction(getToken() || "", body);
 }

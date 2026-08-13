@@ -117,7 +117,7 @@ export function useLogin(navigate: any) {
       toast.loading("Authenticating");
     },
 
-    onSuccess: (data:LoginResponse) => {
+    onSuccess: (data:any) => {
       toast.dismiss();
       toast.success("Login Successfully");
       
@@ -180,7 +180,7 @@ export function useSignup(navigate: any) {
       toast.loading("Signing Up ....");
     },
 
-    onSuccess: (data:LoginResponse) => {
+    onSuccess: (data:any) => {
       toast.dismiss();
       toast.success("Signup Successful");
       localStorage.setItem('token',data.token)
