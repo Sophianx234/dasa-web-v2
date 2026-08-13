@@ -8,7 +8,7 @@ try {
   console.warn("Could not set DNS servers", e);
 }
 
-const DATABASE = process.env.DATABASE;
+const DATABASE = process.env.DATABASE || process.env.MONGODB_URI;
 const DATABASE_LOCAL = process.env.DATABASE_LOCAL;
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
 

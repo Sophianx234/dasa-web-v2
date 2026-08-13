@@ -6,6 +6,7 @@ import { X, ArrowRight, ShieldCheck } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { getPayStackConfig } from "@/utils/paystack";
 import { toast } from "react-hot-toast";
+import { recordTransaction } from "@/actions/transaction";
 
 type PricingPackage = {
   title: string;
@@ -24,15 +25,31 @@ export default function DuesCheckoutModal({ isOpen, onClose, selectedPackage }: 
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const handleSuccess = (reference: any) => {
+  const handleSuccess = async (reference: any) => {
     console.log("Payment Successful:", reference);
-    toast.success(`Payment for ${selectedPackage?.title} successful!`, {
-      style: {
-        borderRadius: "12px",
-        background: "#33312e",
-        color: "#fff",
-      },
+    
+    const res = await recordTransaction({
+      type: "dues",
+      amount: Number(selectedPackage?.price || 0),
+      email,
+      fullName,
+      phone,
+      packageTitle: selectedPackage?.title,
+      reference: reference.reference || reference.trxref || String(Date.now()),
     });
+
+    if (res.success) {
+      toast.success(`Payment for ${selectedPackage?.title} successful!`, {
+        style: {
+          borderRadius: "12px",
+          background: "#33312e",
+          color: "#fff",
+        },
+      });
+    } else {
+      toast.error("Payment processed, but failed to record. Please contact support.");
+    }
+    
     // Reset and close
     setFullName("");
     setEmail("");
@@ -98,9 +115,7 @@ export default function DuesCheckoutModal({ isOpen, onClose, selectedPackage }: 
           {/* Left Side: Form */}
           <div className="w-full md:w-[55%] p-8 md:p-12 lg:p-14 flex flex-col justify-center bg-white relative z-10">
             <div className="mb-8">
-              <div className="w-12 h-12 bg-dasadeep/10 rounded-full flex items-center justify-center mb-6">
-                <ShieldCheck className="w-6 h-6 text-dasadeep" />
-              </div>
+             
               <h2 className="text-3xl lg:text-4xl font-black font-rethink mb-3 text-gray-900 tracking-tight">Secure Checkout</h2>
               <p className="text-gray-500 font-poppins text-sm leading-relaxed">
                 You are paying for the <strong className="text-gray-800">{selectedPackage.title}</strong> package.

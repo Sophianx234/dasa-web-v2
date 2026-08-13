@@ -60,7 +60,7 @@ export default function PricingCard({
       )}
       
       <div
-        className={`w-full ${bgClass} rounded-2xl border ${borderClass} transition-all duration-300 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1
+        className={`w-full ${bgClass} rounded-2xl border ${borderClass} transition-all duration-300 hover:shadow-2xl hover:shadow-black/20 
           flex flex-col md:flex-row overflow-hidden min-h-[320px]`}
       >
         {/* Left Side: Pricing Info */}

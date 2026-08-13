@@ -6,6 +6,7 @@ import { ArrowRight, Heart } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { getPayStackConfig } from "@/utils/paystack";
 import { toast } from "react-hot-toast";
+import { recordTransaction } from "@/actions/transaction";
 
 const QUICK_AMOUNTS = [1000, 2500, 5000, 10000];
 
@@ -15,15 +16,30 @@ export default function DonationCard() {
   const [fullName, setFullName] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
 
-  const onSuccess = (reference: any) => {
+  const onSuccess = async (reference: any) => {
     console.log("Donation Successful:", reference);
-    toast.success(`Thank you for your generous donation!`, {
-      style: {
-        borderRadius: "12px",
-        background: "#33312e",
-        color: "#fff",
-      },
+    
+    const res = await recordTransaction({
+      type: "donation",
+      amount: Number(amount),
+      email,
+      fullName,
+      isAnonymous,
+      reference: reference.reference || reference.trxref || String(Date.now()),
     });
+
+    if (res.success) {
+      toast.success(`Thank you for your generous donation!`, {
+        style: {
+          borderRadius: "12px",
+          background: "#33312e",
+          color: "#fff",
+        },
+      });
+    } else {
+      toast.error("Donation processed, but failed to record. Please contact support.");
+    }
+    
     // Reset form after successful donation
     setAmount("");
     setEmail("");
