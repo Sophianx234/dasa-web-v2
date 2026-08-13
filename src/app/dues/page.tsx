@@ -7,9 +7,11 @@ import PricingCard from "@/components/features/dashboard/pricing/PricingCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 import DonationCard from "@/components/features/dashboard/pricing/DonationCard";
+import DuesCheckoutModal from "@/components/features/dashboard/pricing/DuesCheckoutModal";
 
 export default function DuesPage() {
   const [paymentMode, setPaymentMode] = useState<"Dues" | "Donation">("Dues");
+  const [selectedPackage, setSelectedPackage] = useState<{ title: string; price: string; image?: string } | null>(null);
   
   const paymentModes = ["Dues", "Donation"];
 
@@ -116,6 +118,7 @@ export default function DuesPage() {
                   title="Semester Dues" 
                   price="35.00" 
                   image="https://i.ibb.co/XW5MRmH/photo-60-2024-10-31-06-52-36.jpg"
+                  onSelect={() => setSelectedPackage({ title: "Semester Dues", price: "35.00", image: "https://i.ibb.co/XW5MRmH/photo-60-2024-10-31-06-52-36.jpg" })}
                 />
                 
                 <PricingCard
@@ -126,6 +129,7 @@ export default function DuesPage() {
                   title="One Year Dues" 
                   price="65.00" 
                   image="https://i.ibb.co/dg27dzH/photo-32-2024-10-31-06-53-18.jpg"
+                  onSelect={() => setSelectedPackage({ title: "One Year Dues", price: "65.00", image: "https://i.ibb.co/dg27dzH/photo-32-2024-10-31-06-53-18.jpg" })}
                 />
                 
                 <PricingCard
@@ -136,6 +140,7 @@ export default function DuesPage() {
                   title="Super Package" 
                   price="110.00" 
                   image="https://i.ibb.co/Fn3jDbD/photo-51-2024-10-31-06-52-36.jpg"
+                  onSelect={() => setSelectedPackage({ title: "Super Package", price: "110.00", image: "https://i.ibb.co/Fn3jDbD/photo-51-2024-10-31-06-52-36.jpg" })}
                 />
               </motion.div>
             )}
@@ -161,6 +166,13 @@ export default function DuesPage() {
       </main>
       <Footer />
       <Toaster position="bottom-right" />
+      
+      {/* Checkout Modal Overlay */}
+      <DuesCheckoutModal 
+        isOpen={!!selectedPackage}
+        onClose={() => setSelectedPackage(null)}
+        selectedPackage={selectedPackage}
+      />
     </div>
   );
 }

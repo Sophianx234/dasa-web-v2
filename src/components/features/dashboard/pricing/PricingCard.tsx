@@ -1,10 +1,6 @@
 "use client";
 
-import { getPayStackConfig } from "@/utils/paystack";
-import { FormEvent, ReactNode } from "react";
-import { usePaystackPayment } from "react-paystack";
 import PricingCheck from "./PricingCheck";
-import { toast } from "react-hot-toast";
 import { ArrowRight } from "lucide-react";
 
 type PricingCardProps = {
@@ -17,9 +13,8 @@ type PricingCardProps = {
   badgeTitle?: string; // Optional subtitle badge (like TEAM or STANDARD from the image)
   planPackage: string[];
   type?: "personal" | "standard" | "pro";
-  email?: string;
   image?: string;
-  onSuccessCallback?: (reference: any) => void;
+  onSelect?: () => void;
 };
 
 export default function PricingCard({
@@ -29,29 +24,9 @@ export default function PricingCard({
   badgeTitle,
   planPackage,
   type = "personal",
-  email = "student@dasa-ug.com",
   image,
-  onSuccessCallback
+  onSelect
 }: PricingCardProps) {
-  const onSuccess = (reference: any) => {
-    console.log("Payment Successful:", reference);
-    toast.success(`Payment for ${title} package successful!`, {
-      style: {
-        borderRadius: '12px',
-        background: '#33312e',
-        color: '#fff',
-      },
-    });
-    if (onSuccessCallback) {
-      onSuccessCallback(reference);
-    }
-  };
-
-  const onClose = () => {
-    console.log("Payment dialog closed.");
-  };
-
-  const initializePayment = usePaystackPayment(getPayStackConfig(price, email));
 
   // Determine styles based on type
   const isMostPopular = type === "standard";
@@ -113,17 +88,13 @@ export default function PricingCard({
           </h2>
           
           <button
-            onClick={(e: FormEvent) => {
+            onClick={(e: React.FormEvent) => {
               e.preventDefault();
-              if (!email || email === "") {
-                toast.error("Please enter your email to proceed.");
-                return;
-              }
-              initializePayment({ onSuccess, onClose });
+              onSelect?.();
             }}
             className={`group w-fit flex items-center gap-2 py-3 px-6 text-sm rounded-lg font-bold transition-all duration-300 ${buttonClass}`}
           >
-            Buy now
+            Pay now
             <ArrowRight className="w-4 h-4 transition-transform duration-300 " />
           </button>
         </div>
