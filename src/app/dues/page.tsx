@@ -6,7 +6,7 @@ import Footer from "@/components/features/ui/Footer";
 import PricingCard from "@/components/features/dashboard/pricing/PricingCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
-import { ArrowRight, Heart } from "lucide-react";
+import DonationCard from "@/components/features/dashboard/pricing/DonationCard";
 
 export default function DuesPage() {
   const [paymentMode, setPaymentMode] = useState<"Dues" | "Donation">("Dues");
@@ -141,36 +141,7 @@ export default function DuesPage() {
             )}
 
             {paymentMode === "Donation" && (
-              <motion.div 
-                key="donation"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="max-w-xl mx-auto bg-white p-10 md:p-14 rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 text-center"
-              >
-                <div className="mx-auto w-16 h-16 bg-dasadeep/10 text-dasadeep rounded-full flex items-center justify-center mb-8">
-                  <Heart className="w-8 h-8 fill-dasadeep" />
-                </div>
-                <h2 className="text-3xl font-black font-rethink text-gray-900 mb-4">Support Our Vision</h2>
-                <p className="text-gray-500 font-poppins mb-10 leading-relaxed text-sm md:text-base">
-                  Your generous donation goes directly towards funding our projects, supporting students, and building the future of Dagbon. Thank you for making a difference.
-                </p>
-
-                <div className="space-y-6">
-                  <div>
-                    <input 
-                      type="number" 
-                      placeholder="Amount (GH₵)"
-                      className="w-full text-center text-3xl font-black font-rethink bg-[#f9f7f4] border border-gray-200 focus:bg-white focus:border-dasadeep focus:ring-1 focus:ring-dasadeep rounded-2xl px-6 py-6 transition-all outline-none"
-                    />
-                  </div>
-                  <button className="group w-full flex items-center justify-center gap-2 py-5 px-6 rounded-xl font-bold bg-dasadeep text-white hover:bg-orange-500 transition-all duration-300 shadow-md shadow-dasadeep/20 uppercase tracking-wider text-sm">
-                    Donate Now
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
-                </div>
-              </motion.div>
+              <DonationCard />
             )}
           </AnimatePresence>
 
