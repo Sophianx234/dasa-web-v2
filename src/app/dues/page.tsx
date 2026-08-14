@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
 import Footer from "@/components/features/ui/Footer";
 import PricingCard from "@/components/features/dashboard/pricing/PricingCard";
@@ -9,8 +10,24 @@ import { Toaster } from "react-hot-toast";
 import DonationCard from "@/components/features/dashboard/pricing/DonationCard";
 import DuesCheckoutModal from "@/components/features/dashboard/pricing/DuesCheckoutModal";
 
+function TabListener({ setPaymentMode }: { setPaymentMode: React.Dispatch<React.SetStateAction<"Dues" | "Donation">> }) {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+
+  useEffect(() => {
+    if (tab === "donation") {
+      setPaymentMode("Donation");
+    } else if (tab === "dues") {
+      setPaymentMode("Dues");
+    }
+  }, [tab, setPaymentMode]);
+
+  return null;
+}
+
 export default function DuesPage() {
   const [paymentMode, setPaymentMode] = useState<"Dues" | "Donation">("Dues");
+
   const [selectedPackage, setSelectedPackage] = useState<{ title: string; price: string; image?: string } | null>(null);
   
   const paymentModes = ["Dues", "Donation"];
@@ -43,6 +60,10 @@ export default function DuesPage() {
     <div className="text-stone-900 min-h-screen scrollbar-hide w-full bg-[#f9f7f4]">
       <NavigationWrapper />
       
+      <Suspense fallback={null}>
+        <TabListener setPaymentMode={setPaymentMode} />
+      </Suspense>
+
       <main className="pt-32 pb-24 px-6 relative overflow-hidden">
         
         {/* Background Decorative Elements */}

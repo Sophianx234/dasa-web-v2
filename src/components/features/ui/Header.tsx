@@ -72,8 +72,8 @@ export default function Header() {
           
           {/* Desktop Donation Button */}
           <Link
-            href="/dues"
-            className="hidden sm:flex items-center justify-center gap-2 bg-dasadeep text-white font-bold text-sm py-2.5 px-6 rounded-full  transition-all duration-300  group"
+            href="/dues?tab=donation"
+                     className="hidden sm:flex items-center justify-center gap-2 bg-dasadeep text-white font-bold text-sm py-2.5 px-6 rounded-full  transition-all duration-300  group"
           >
             <HandHeart className="w-4 h-4  transition-transform duration-300" />
             Make Donation
