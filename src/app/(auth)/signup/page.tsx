@@ -400,6 +400,17 @@ export default function SignupPage() {
                 </motion.div>
               )}
             </AnimatePresence>
+            
+            {/* Footer */}
+            <p className="text-center text-sm text-[#33312e]/60 font-poppins pt-4 mt-6 border-t border-gray-100">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-[#33312e] font-semibold hover:underline transition-colors"
+              >
+                Log in
+              </Link>
+            </p>
           </form>
         </div>
 
