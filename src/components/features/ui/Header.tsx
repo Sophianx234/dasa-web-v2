@@ -1,5 +1,6 @@
 "use client";
-import { IoMenu, IoHeart } from "react-icons/io5";
+import { useState } from "react";
+import { IoMenu, IoHeart, IoClose } from "react-icons/io5";
 import Link from "next/link";
 
 import { toggleNav } from "../slices/navSlice";
@@ -10,6 +11,7 @@ import { HandHeart } from "lucide-react";
 // HEADER COMPONENT (Default Export)
 // --------------------------------------------------------
 export default function Header() {
+  const [showBanner, setShowBanner] = useState(true);
 
   // Navigation Links Array
   // Added an 'isDummy' flag for links that shouldn't navigate anywhere yet
@@ -23,8 +25,34 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 bg-[#FEF3E7]/80 backdrop-blur-md border-b border-zinc-200/50 shadow-sm transition-all duration-300">
-      <div className="max-w-[90rem] mx-auto flex items-center justify-between px-3 sm:px-8 h-[5.6rem]">
+    <header className="fixed left-0 right-0 top-0 z-50 flex flex-col">
+      {/* -------------------------------------------------------- */}
+      {/* NOTIFICATION BANNER */}
+      {/* -------------------------------------------------------- */}
+      {showBanner && (
+        <div className="w-full bg-zinc-900 text-white px-4 py-2.5 flex items-center justify-center relative shadow-sm">
+          <p className="text-xs md:text-sm font-medium font-poppins text-center pr-8">
+            <span className="mr-2 hidden sm:inline">🎉</span>
+            Upcoming DaSA National Conference 2026.{" "}
+            <Link href="#" className="underline font-bold text-dasadeep hover:text-white transition-colors ml-1">
+              Register now!
+            </Link>
+          </p>
+          <button 
+            onClick={() => setShowBanner(false)}
+            className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"
+            aria-label="Dismiss banner"
+          >
+            <IoClose className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      {/* -------------------------------------------------------- */}
+      {/* MAIN NAVBAR */}
+      {/* -------------------------------------------------------- */}
+      <div className="w-full bg-[#FEF3E7]/80 backdrop-blur-md border-b border-zinc-200/50 shadow-sm transition-all duration-300">
+        <div className="max-w-[90rem] mx-auto flex items-center justify-between px-3 sm:px-8 h-[5.6rem]">
         
         {/* Logo Section */}
         <DasaLogo 
@@ -96,6 +124,7 @@ export default function Header() {
             <IoMenu className="w-7 h-7" />
           </button>
         </div>
+      </div>
       </div>
     </header>
   );
