@@ -14,7 +14,7 @@ import BriefGallery from "@/components/features/dashboard/components/BriefGaller
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dagbon Students Association (DaSA) | UG Branch",
+  title: "DaSAug | UG Branch",
   description: "Welcome to the official website of the Dagbon Students Association, University of Ghana Branch. Join our vibrant community of students celebrating Dagbon heritage.",
 };
 
