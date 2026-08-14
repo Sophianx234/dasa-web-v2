@@ -61,7 +61,7 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
               
               
               {title && (
-                <h2 className={`text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight ${isDark ? 'text-white' : 'text-[#33312e]'} font-rethink leading-[1.05] mb-4 md:mb-6 drop-shadow-sm`}>
+                <h2 className={`text-4xl md:text-3xl lg:text-5xl font-extrabold tracking-tight ${isDark ? 'text-white' : 'text-[#33312e]'} font-rethink leading-[1.05] mb-4 md:mb-6 drop-shadow-sm`}>
                   {title}
                 </h2>
               )}
@@ -94,7 +94,7 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
                       
                       {/* Photo Caption */}
                       <div className="absolute bottom-5 left-0 w-full text-center flex justify-center items-center gap-2">
-                        <span className="font-poppins font-semibold text-zinc-400 text-xl md:text-2xl">Dagbon Students Association</span>
+                        <span className="font-poppins font-semibold text-zinc-400 text-base sm:text-xl lg:text-2xl">Dagbon Students Association</span>
                       </div>
                   </div>
 
