@@ -13,8 +13,7 @@ import BriefGallery from "@/components/features/dashboard/components/BriefGaller
 
 export default function Home() {
   return (
-    <div className="text-stone-900 h-dvh scrollbar-hide overflow-x-hidden w-dvw">
-      <NavigationWrapper />
+    <div className="">
       <main className="">
         <Hero />
         <BriefAbout />
@@ -26,7 +25,6 @@ export default function Home() {
         <BriefGallery style="overview"/>
         <CTAFooter />
         <Questions />
-        <Footer />
       </main>
     </div>
   );

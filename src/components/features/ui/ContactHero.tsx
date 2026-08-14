@@ -23,11 +23,11 @@ const slideImages: SlidesImagesType[] = [
 
 export default function ContactHero() {
   return (
-    <section className="relative w-full overflow-hidden flex flex-col mt-[5.6rem]">
+    <section className="relative w-full overflow-hidden flex flex-col">
       
       {/* Slider Container */}
       <motion.div
-        className="relative w-full h-[55vh] min-h-[400px] sm:h-[65vh] md:h-[calc(100vh-5.6rem)]"
+        className="relative w-full h-[55vh] min-h-[400px] sm:h-[65vh] md:h-[calc(100dvh-var(--header-height,5.6rem))]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}

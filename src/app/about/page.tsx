@@ -16,7 +16,6 @@ export const metadata = {
 export default function AboutPage() {
   return (
     <div className="text-stone-900 min-h-screen scrollbar-hide w-full">
-      <NavigationWrapper />
       <main>
         <AboutHero />
         <FeaturesBanner/>
@@ -25,7 +24,6 @@ export default function AboutPage() {
         <Impact />
         <Values />
         <ConstitutionSection />
-        <Footer />
       </main>
     </div>
   );

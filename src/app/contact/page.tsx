@@ -48,7 +48,6 @@ export default function ContactPage() {
 
   return (
     <div className="text-stone-900 min-h-screen scrollbar-hide w-full">
-    <NavigationWrapper />
     <ContactHero />
     <FeaturesBanner/>
     <section className="relative w-full  py-24 md:py-32 overflow-hidden flex items-center">
@@ -231,7 +230,6 @@ export default function ContactPage() {
       </div>
       <Toaster position="bottom-right" />
     </section>
-    <Footer/>
     </div>
   );
 }

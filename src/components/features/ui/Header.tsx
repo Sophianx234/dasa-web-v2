@@ -1,17 +1,56 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { IoMenu, IoHeart, IoClose } from "react-icons/io5";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { toggleNav } from "../slices/navSlice";
 import { DasaLogo } from "./DasaLogo";
 import { HandHeart } from "lucide-react";
+
+const bannerEvents = [
+  {
+    icon: "🎉",
+    text: "Upcoming DaSA National Conference 2026.",
+    linkText: "Register now!",
+    linkUrl: "/contact",
+  },
+  {
+    icon: "🏆",
+    text: "Join us for the Annual Dinner and Awards Night.",
+    linkText: "Get Tickets",
+    linkUrl: "/contact",
+  },
+];
 
 // --------------------------------------------------------
 // HEADER COMPONENT (Default Export)
 // --------------------------------------------------------
 export default function Header() {
   const [showBanner, setShowBanner] = useState(true);
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Rotate banner text every 5 seconds
+  useEffect(() => {
+    if (!showBanner) return;
+    const interval = setInterval(() => {
+      setCurrentEventIndex((prev) => (prev + 1) % bannerEvents.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [showBanner]);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (headerRef.current) {
+        document.documentElement.style.setProperty('--header-height', `${headerRef.current.offsetHeight}px`);
+      }
+    };
+    // small timeout to ensure DOM is painted
+    setTimeout(updateHeight, 0);
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [showBanner]);
 
   // Navigation Links Array
   // Added an 'isDummy' flag for links that shouldn't navigate anywhere yet
@@ -25,19 +64,28 @@ export default function Header() {
   ];
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 flex flex-col">
+    <header ref={headerRef} className="sticky left-0 right-0 top-0 z-50 flex flex-col">
       {/* -------------------------------------------------------- */}
       {/* NOTIFICATION BANNER */}
       {/* -------------------------------------------------------- */}
       {showBanner && (
-        <div className="w-full bg-zinc-900 text-white px-4 py-2.5 flex items-center justify-center relative shadow-sm">
-          <p className="text-xs md:text-sm font-medium font-poppins text-center pr-8">
-            <span className="mr-2 hidden sm:inline">🎉</span>
-            Upcoming DaSA National Conference 2026.{" "}
-            <Link href="#" className="underline font-bold text-dasadeep hover:text-white transition-colors ml-1">
-              Register now!
-            </Link>
-          </p>
+        <div className="w-full bg-zinc-900 text-white px-4 py-2.5 flex items-center justify-center relative shadow-sm min-h-[40px] overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentEventIndex}
+              initial={{ y: 15, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -15, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="text-xs md:text-sm font-medium font-poppins text-center pr-8"
+            >
+              <span className="mr-2 hidden sm:inline">{bannerEvents[currentEventIndex].icon}</span>
+              {bannerEvents[currentEventIndex].text}{" "}
+              <Link href={bannerEvents[currentEventIndex].linkUrl} className="underline font-bold text-dasadeep hover:text-white transition-colors ml-1">
+                {bannerEvents[currentEventIndex].linkText}
+              </Link>
+            </motion.p>
+          </AnimatePresence>
           <button 
             onClick={() => setShowBanner(false)}
             className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white transition-colors p-1"

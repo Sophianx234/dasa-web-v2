@@ -172,9 +172,8 @@ export default function AnonymousPage() {
 
   return (
     <div className="text-stone-900 min-h-screen scrollbar-hide w-full bg-[#f9f7f4] flex flex-col">
-      <NavigationWrapper />
       
-      <main className="flex-grow pt-32 pb-24 px-6 relative">
+      <main className="flex-grow pt-10 pb-24 px-6 relative">
         
         {/* Decorative Background Elements */}
         <div className="absolute top-20 right-10 w-[500px] h-[500px] bg-dasadeep/5 rounded-full blur-3xl pointer-events-none" />
@@ -404,7 +403,6 @@ export default function AnonymousPage() {
         </div>
       </main>
       
-      <Footer />
       <Toaster position="bottom-right" />
     </div>
   );

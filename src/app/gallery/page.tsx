@@ -11,7 +11,6 @@ export const metadata = {
 export default function GalleryPage() {
   return (
     <div className="text-stone-900  scrollbar-hide w-full overflow-hidden">
-      <NavigationWrapper />
       <div className="pt-24 md:pt-20">
         <Banner />
         <BriefGallery style="side" />

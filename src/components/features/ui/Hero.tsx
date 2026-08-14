@@ -27,12 +27,12 @@ const slideImages: SlidesImagesType[] = [
 
 export default function Hero() {
   return (
-    <section className="relative w-full overflow-hidden flex flex-col mt-[5.6rem]">
+    <section className="relative w-full overflow-hidden flex flex-col">
       
       {/* Slider Container */}
       <motion.div
-        // CHANGED: Restored mobile/sm heights, added md: prefix to the full-screen calc
-        className="relative w-full h-[55vh] min-h-[400px] sm:h-[65vh] md:h-[calc(100vh-5.6rem)]"
+        // Dynamically calculates height based on the sticky header (banner or no banner)
+        className="relative w-full h-[55vh] min-h-[400px] sm:h-[65vh] md:h-[calc(100dvh-var(--header-height,5.6rem))]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}

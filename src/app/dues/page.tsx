@@ -58,13 +58,12 @@ export default function DuesPage() {
 
   return (
     <div className="text-stone-900 min-h-screen scrollbar-hide w-full bg-[#f9f7f4]">
-      <NavigationWrapper />
       
       <Suspense fallback={null}>
         <TabListener setPaymentMode={setPaymentMode} />
       </Suspense>
 
-      <main className="pt-32 pb-24 px-6 relative overflow-hidden">
+      <main className="pt-10 pb-24 px-6 relative overflow-hidden">
         
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-dasadeep/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -185,7 +184,6 @@ export default function DuesPage() {
 
         </div>
       </main>
-      <Footer />
       <Toaster position="bottom-right" />
       
       {/* Checkout Modal Overlay */}
