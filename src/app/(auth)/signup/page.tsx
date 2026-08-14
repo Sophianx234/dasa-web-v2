@@ -23,8 +23,7 @@ import { DasaLogo } from "@/components/features/ui/DasaLogo";
 // import { signupAction } from "@/app/actions/authActions";
 
 export type signupFormValues = {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   course: string;
   hall: string;
   annex: string;
@@ -138,28 +137,16 @@ export default function SignupPage() {
                   exit="exit"
                   className="space-y-4"
                 >
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormInput
-                      type="text"
-                      register={register}
-                      inputName="firstName"
-                      placeholder="First name"
-                      style={inputStyle}
-                      icon={
-                        <IoPersonOutline className="absolute left-3 text-gray-400 text-lg" />
-                      }
-                    />
-                    <FormInput
-                      type="text"
-                      register={register}
-                      inputName="lastName"
-                      placeholder="Last name"
-                      style={inputStyle}
-                      icon={
-                        <IoPersonOutline className="absolute left-3 text-gray-400 text-lg" />
-                      }
-                    />
-                  </div>
+                  <FormInput
+                    type="text"
+                    register={register}
+                    inputName="fullName"
+                    placeholder="Full name"
+                    style={inputStyle}
+                    icon={
+                      <IoPersonOutline className="absolute left-3 text-gray-400 text-lg" />
+                    }
+                  />
 
                   <FormInput
                     type="email"

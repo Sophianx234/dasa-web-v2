@@ -6,8 +6,7 @@ import crypto from "crypto";
 import { genRandomName } from "../utils/helpers";
 export type userDocument = Document & {
   username: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   password: string;
   role?: "user" | "admin" | "guest";
@@ -39,8 +38,7 @@ type userModel = Model<userDocument>;
 
 const userSchema = new mongoose.Schema<userDocument>({
   username: String,
-  firstName: { type: String, required: [true, "firstname is required"] },
-  lastName: { type: String, required: [true, "lastname is required"] },
+  fullName: { type: String, required: [true, "fullname is required"] },
   email: { type: String, required: [true, "email is required"] },
   password: {
     type: String,
@@ -115,7 +113,7 @@ userSchema.pre(/^find/, function (this: any, next) {
 userSchema.pre("save", function (this: userDocument, next) {
   if(this.isNew){
 
-    this.username = `${this.firstName} ${this.lastName}`;
+    this.username = this.fullName;
     this.anonymousProfile = this.sex === "male"
     ? "https://res.cloudinary.com/dtytb8qrc/image/upload/v1738576015/Dasa/users/bwg76dwwvyte11f71jah.jpg"
     : "https://res.cloudinary.com/dtytb8qrc/image/upload/v1738576016/Dasa/users/ocmq2tel9kfwdb5ew6ej.jpg";

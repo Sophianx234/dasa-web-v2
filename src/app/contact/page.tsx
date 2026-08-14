@@ -12,8 +12,7 @@ import Banner from "@/components/features/ui/Banner";
 import FeaturesBanner from "@/components/features/ui/FeaturesBanner";
 
 type ContactFormValues = {
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   subject: string;
   message: string;
@@ -136,26 +135,15 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* First Name */}
-                <div>
+                {/* Full Name */}
+                <div className="md:col-span-2">
                   <input
-                    {...register("firstName", { required: "First name is required" })}
+                    {...register("fullName", { required: "Full name is required" })}
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Full Name"
                     className={inputStyle}
                   />
-                  {errors.firstName && <span className="text-red-500 text-xs font-medium px-2 mt-1 block">{errors.firstName.message}</span>}
-                </div>
-
-                {/* Last Name */}
-                <div>
-                  <input
-                    {...register("lastName", { required: "Last name is required" })}
-                    type="text"
-                    placeholder="Last Name"
-                    className={inputStyle}
-                  />
-                  {errors.lastName && <span className="text-red-500 text-xs font-medium px-2 mt-1 block">{errors.lastName.message}</span>}
+                  {errors.fullName && <span className="text-red-500 text-xs font-medium px-2 mt-1 block">{errors.fullName.message}</span>}
                 </div>
               </div>
 
