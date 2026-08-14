@@ -3,6 +3,7 @@
 import connectToDatabase from "@/lib/mongoose";
 import AnonymousMessage from "@/lib/models/AnonymousMessage";
 import { revalidatePath } from "next/cache";
+import { pusherServer } from "@/lib/pusher";
 
 export async function postAnonymousMessage(message: string, authorName: string, avatarUrl: string) {
   try {
@@ -23,7 +24,12 @@ export async function postAnonymousMessage(message: string, authorName: string, 
     
     revalidatePath("/anonymous"); // Revalidate to refresh any cached pages
     
-    return { success: true, data: JSON.parse(JSON.stringify(newMessage)) };
+    const serializedMsg = JSON.parse(JSON.stringify(newMessage));
+    
+    // Broadcast instantly to all connected users
+    await pusherServer.trigger("presence-anonymous", "new-message", serializedMsg);
+    
+    return { success: true, data: serializedMsg };
   } catch (error) {
     console.error("Error posting anonymous message:", error);
     return { success: false, error: "Failed to post message." };

@@ -121,6 +121,15 @@ export default function AnonymousPage() {
       setActiveUsers((prev) => prev.filter(u => u.name !== member.info.name));
     });
 
+    // Listen for new chat messages from any user
+    channel.bind("new-message", (newMsg: Message) => {
+      setMessages((prev) => {
+        // Prevent duplicates in case the user is the author and we already pushed it locally
+        if (prev.find(m => m._id === newMsg._id)) return prev;
+        return [newMsg, ...prev];
+      });
+    });
+
     return () => {
       pusher.unsubscribe("presence-anonymous");
       pusher.disconnect();
@@ -148,8 +157,11 @@ export default function AnonymousPage() {
           color: "#fff",
         },
       });
-      // Add new message to the top of the list instantly
-      setMessages((prev) => [res.data, ...prev]);
+      // Add new message to the top of the list instantly (but check for duplicates in case Pusher already delivered it)
+      setMessages((prev) => {
+        if (prev.find(m => m._id === res.data._id)) return prev;
+        return [res.data, ...prev];
+      });
       setMessage("");
     } else {
       toast.error(res.error || "Failed to send message. Please try again.");
