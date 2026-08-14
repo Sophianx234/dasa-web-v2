@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
 import Footer from "@/components/features/ui/Footer";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, MessageSquareDashed, Clock, RefreshCw } from "lucide-react";
+import { Send, Sparkles, MessageSquareDashed, Clock, RefreshCw, Quote } from "lucide-react";
 import { toast, Toaster } from "react-hot-toast";
 import { postAnonymousMessage, getAnonymousMessages } from "@/actions/anonymous";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { dagbaniNames } from "@/lib/data/dagbaniNames";
+import Pusher from "pusher-js";
 
 dayjs.extend(relativeTime);
 
@@ -33,6 +34,7 @@ export default function AnonymousPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [identity, setIdentity] = useState<Identity | null>(null);
+  const [activeUsers, setActiveUsers] = useState<any[]>([]);
 
   const generateIdentity = () => {
     const randomIndex = Math.floor(Math.random() * dagbaniNames.length);
@@ -82,6 +84,49 @@ export default function AnonymousPage() {
     fetchMessages();
   }, []);
 
+  // Initialize Pusher Presence Channel
+  useEffect(() => {
+    if (!identity) return;
+    
+    // Enable pusher logging for debugging in dev if needed
+    // Pusher.logToConsole = true;
+
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+      authEndpoint: "/api/pusher/auth",
+      auth: {
+        params: {
+          name: identity.name,
+          avatar: identity.avatar,
+        },
+      },
+    });
+
+    const channel = pusher.subscribe("presence-anonymous");
+
+    channel.bind("pusher:subscription_succeeded", (members: any) => {
+      // Object containing all currently subscribed members
+      const users = Object.keys(members.members).map(id => members.members[id]);
+      setActiveUsers(users);
+    });
+
+    channel.bind("pusher:member_added", (member: any) => {
+      setActiveUsers((prev) => {
+        if (prev.find(u => u.name === member.info.name)) return prev;
+        return [...prev, member.info];
+      });
+    });
+
+    channel.bind("pusher:member_removed", (member: any) => {
+      setActiveUsers((prev) => prev.filter(u => u.name !== member.info.name));
+    });
+
+    return () => {
+      pusher.unsubscribe("presence-anonymous");
+      pusher.disconnect();
+    };
+  }, [identity]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) {
@@ -124,7 +169,36 @@ export default function AnonymousPage() {
         <div className="absolute top-80 left-10 w-[400px] h-[400px] bg-zinc-900/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10 flex flex-col items-center">
-          
+          {/* Active Users Horizontal Scroll */}
+          {activeUsers.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full max-w-4xl mx-auto mb-8 bg-white/60 backdrop-blur-md p-4 rounded-3xl  border border-white flex items-center gap-4 overflow-x-auto scrollbar-hide"
+            >
+              <div className="flex gap-3 px-2">
+                <AnimatePresence>
+                  {activeUsers.map((user, idx) => (
+                    <motion.div 
+                      key={`${user.name}-${idx}`}
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      className="relative flex-shrink-0 cursor-pointer group"
+                      title={user.name}
+                    >
+                      <img 
+                        src={user.avatar} 
+                        alt={user.name}
+                        className="w-12 h-12 rounded-full bg-gray-50 border-2 border-white shadow ring-2 ring-transparent group-hover:ring-dasadeep transition-all duration-300"
+                      />
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
           {/* Header */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -132,12 +206,10 @@ export default function AnonymousPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-10 max-w-2xl"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-xl shadow-gray-200/50 mb-6 text-dasadeep">
-              <MessageSquareDashed className="w-8 h-8" />
-            </div>
+           
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black font-rethink text-gray-900 leading-[1.1] mb-4 tracking-tighter">
               Speak Your Mind. <br className="hidden md:block" />
-              <span className="text-zinc-400">Completely Secret.</span>
+              <span className="text-dasadeep">Completely Secret.</span>
             </h1>
             <p className="text-gray-500 font-poppins text-sm md:text-base leading-relaxed max-w-lg mx-auto">
               Share confessions, constructive feedback, or random thoughts. We assign you a secret identity so you can post safely.
@@ -227,16 +299,31 @@ export default function AnonymousPage() {
             </form>
           </motion.div>
 
-          {/* Wall of Secrets (Messages Feed) */}
-          <div className="w-full max-w-7xl">
-            <div className="flex items-center justify-between mb-10 border-b border-gray-200/60 pb-4">
-              <h2 className="text-2xl md:text-3xl font-black font-rethink text-zinc-900">
-                Wall of Secrets
-              </h2>
-              <span className="bg-white text-dasadeep font-bold font-poppins text-sm px-4 py-1.5 rounded-full shadow-sm shadow-gray-200">
+          {/* Wall of Secrets Header */}
+          <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between mb-8 pb-4 border-b border-gray-200/60 gap-4">
+            <h2 className="text-2xl md:text-3xl font-black font-rethink text-zinc-900">
+              Wall of Secrets
+            </h2>
+            <div className="flex gap-3 items-center">
+              {activeUsers.length > 0 && (
+                <div className="bg-green-50 text-green-700 font-bold font-rethink text-xs px-4 py-2 rounded-full border border-green-200/50 flex items-center gap-2 ">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  </span>
+                  {activeUsers.length} Online Now
+                </div>
+              )}
+              <span className="bg-white text-dasadeep font-bold font-poppins text-sm px-4 py-2 rounded-full  border border-gray-100">
                 {messages.length} Messages
               </span>
             </div>
+          </div>
+
+          
+
+          {/* Messages Feed */}
+          <div className="w-full max-w-7xl">
 
             {isLoading ? (
               <div className="flex justify-center items-center py-20">
@@ -247,33 +334,56 @@ export default function AnonymousPage() {
                 <p className="text-gray-500 font-poppins">No messages yet. Be the first to break the ice!</p>
               </div>
             ) : (
-              <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+              <div className="flex flex-col gap-8 max-w-4xl mx-auto w-full pt-4">
                 <AnimatePresence>
-                  {messages.map((msg) => (
-                    <motion.div
-                      key={msg._id}
-                      initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ type: "spring", bounce: 0.2 }}
-                      className="break-inside-avoid bg-white p-6 md:p-8 rounded-[2rem] shadow-lg shadow-gray-200/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
-                    >
-                      <div className="flex items-center gap-3 mb-5 pb-5 border-b border-gray-100">
-                        <img src={msg.avatarUrl || `https://api.dicebear.com/9.x/adventurer/svg?seed=fallback&backgroundColor=f9f7f4`} alt="avatar" className="w-10 h-10 rounded-full bg-[#f9f7f4] border border-gray-100" />
-                        <div>
-                          <p className="font-bold font-rethink text-sm text-zinc-900 leading-none mb-1.5">{msg.authorName || "Anonymous User"}</p>
-                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 font-rethink leading-none">
-                            <Clock className="w-3 h-3" />
-                            {dayjs(msg.createdAt).fromNow()}
-                          </div>
+                  {messages.map((msg) => {
+                    const isMe = identity && msg.authorName === identity.name;
+                    
+                    return (
+                      <motion.div
+                        key={msg._id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ type: "spring", bounce: 0.2 }}
+                        className={`flex gap-3 md:gap-4 w-full ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
+                      >
+                        {/* Avatar */}
+                        <div className="flex-shrink-0 mt-1">
+                          <img 
+                            src={msg.avatarUrl || `https://api.dicebear.com/9.x/adventurer/svg?seed=fallback&backgroundColor=f9f7f4`} 
+                            alt="avatar" 
+                            className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white object-cover shadow-sm ring-2 ring-gray-100/50" 
+                          />
                         </div>
-                      </div>
-                      
-                      {/* Message Content */}
-                      <p className="text-gray-700 font-poppins leading-relaxed whitespace-pre-wrap">
-                        {msg.message}
-                      </p>
-                    </motion.div>
-                  ))}
+
+                        {/* Message Content */}
+                        <div className={`flex flex-col max-w-[85%] md:max-w-[75%] ${isMe ? 'items-end' : 'items-start'}`}>
+                          
+                          {/* Header (Name & Time) */}
+                          <div className={`flex items-end gap-2 mb-1.5 px-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
+                            <span className="font-bold font-rethink text-sm md:text-[15px] text-zinc-900 leading-none">
+                              {msg.authorName || "Anonymous User"}
+                            </span>
+                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-wider font-rethink leading-none mb-[1px]">
+                              {dayjs(msg.createdAt).fromNow()}
+                            </span>
+                          </div>
+
+                          {/* Chat Bubble */}
+                          <div className={`px-6 py-5 shadow-sm transition-shadow duration-300 ${
+                            isMe 
+                              ? 'bg-zinc-900 text-white rounded-3xl rounded-tr-sm hover:shadow-md' 
+                              : 'bg-white text-zinc-800 rounded-3xl rounded-tl-sm border border-gray-100 hover:shadow-md'
+                          }`}>
+                            <p className={`font-poppins leading-[1.7] text-[15px] whitespace-pre-wrap ${isMe ? 'text-gray-100' : 'text-zinc-700'}`}>
+                              {msg.message}
+                            </p>
+                          </div>
+                          
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </AnimatePresence>
               </div>
             )}
