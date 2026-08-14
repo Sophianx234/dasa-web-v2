@@ -28,14 +28,14 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
   return (
     <motion.div 
       ref={ref}
-      className="sticky w-full origin-top"
+      className="relative md:sticky w-full origin-top top-0 md:top-[var(--sticky-top)] mb-8 md:mb-0"
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
       style={{ 
-        top: `calc(10vh + ${index * 24}px)`,
+        "--sticky-top": `calc(10vh + ${index * 24}px)`,
         willChange: "transform, opacity"
-      }}
+      } as React.CSSProperties}
     >
       <div 
         className={`${bgColor} w-full h-auto md:h-[var(--card-height)] rounded-[2.5rem] ${isDark ? 'border-zinc-800' : 'border-black/5'} border relative overflow-hidden flex flex-col`}
@@ -74,7 +74,7 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
             {/* IMAGE COLUMN - The Tilted Editorial Polaroid */}
             <div className="w-full md:w-1/2 h-full flex items-center justify-center relative mt-10 md:mt-0 pb-10 md:pb-0">
               
-              <div className=" max-w-sm lg:max-w-md aspect-[4/4] w-2xl relative z-20 transform md:rotate-3 transition-all duration-700   group cursor-pointer">
+              <div className="max-w-sm lg:max-w-md aspect-[4/4] w-full relative z-20 transform md:rotate-3 transition-all duration-700 group cursor-pointer">
                   
                   {/* Glowing ambient blob behind the image */}
                   <div className={`absolute -inset-10 -z-10 rounded-full blur-3xl opacity-50 transition-opacity duration-700 group-hover:opacity-80 ${isDark ? 'bg-zinc-700' : 'bg-dasadeep'}`}></div>
@@ -94,7 +94,7 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
                       
                       {/* Photo Caption */}
                       <div className="absolute bottom-5 left-0 w-full text-center flex justify-center items-center gap-2">
-                        <span className="font-poppins font-semibold text-zinc-400 text-xl">Dagbon Students Association</span>
+                        <span className="font-poppins font-semibold text-zinc-400 text-xl md:text-2xl">Dagbon Students Association</span>
                       </div>
                   </div>
 
