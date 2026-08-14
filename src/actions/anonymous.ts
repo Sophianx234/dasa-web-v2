@@ -4,6 +4,9 @@ import connectToDatabase from "@/lib/mongoose";
 import AnonymousMessage from "@/lib/models/AnonymousMessage";
 import { revalidatePath } from "next/cache";
 import { pusherServer } from "@/lib/pusher";
+import { Filter } from "bad-words";
+
+const filter = new Filter();
 
 export async function postAnonymousMessage(message: string, authorName: string, avatarUrl: string) {
   try {
@@ -14,10 +17,13 @@ export async function postAnonymousMessage(message: string, authorName: string, 
       return { success: false, error: "Identity missing." };
     }
 
+    // Automatically censor any profanity before hitting the database
+    const cleanedMessage = filter.clean(message.trim());
+
     await connectToDatabase();
     
     const newMessage = await AnonymousMessage.create({ 
-      message: message.trim(),
+      message: cleanedMessage,
       authorName,
       avatarUrl
     });

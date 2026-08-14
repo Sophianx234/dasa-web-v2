@@ -295,13 +295,13 @@ export default function AnonymousPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !identity}
-                  className="w-full sm:w-auto group relative flex items-center justify-center gap-3 py-4 px-8 rounded-full font-bold bg-zinc-900 text-white hover:bg-black transition-all duration-300 shadow-xl shadow-zinc-900/20 disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
+                  className="w-full sm:w-auto group relative flex items-center justify-center gap-3 py-4 px-8 rounded-full font-bold bg-zinc-900 text-white hover:bg-black transition-all duration-300 shadow-sm  disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden"
                 >
                   <span className="relative z-10 font-rethink tracking-wide">
                     {isSubmitting ? "Sending..." : "Send Secret"}
                   </span>
                   {!isSubmitting && (
-                    <Send className="relative z-10 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    <Send className="relative z-10 w-4 h-4 transition-transform duration-300 " />
                   )}
                   
                   <div className="absolute inset-0 bg-dasadeep translate-y-[100%] group-hover:translate-y-0 transition-transform duration-500 ease-out z-0"></div>
@@ -376,13 +376,13 @@ export default function AnonymousPage() {
                             <span className="font-bold font-rethink text-sm md:text-[15px] text-zinc-900 leading-none">
                               {msg.authorName || "Anonymous User"}
                             </span>
-                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-wider font-rethink leading-none mb-[1px]">
+                            <span className="text-[10px] md:text-[11px] font-bold text-gray-400  tracking-wider font-rethink leading-none mb-[1px]">
                               {dayjs(msg.createdAt).fromNow()}
                             </span>
                           </div>
 
                           {/* Chat Bubble */}
-                          <div className={`px-6 py-5 shadow-sm transition-shadow duration-300 ${
+                          <div className={`px-6 py-5  transition-shadow duration-300 ${
                             isMe 
                               ? 'bg-zinc-900 text-white rounded-3xl rounded-tr-sm hover:shadow-md' 
                               : 'bg-white text-zinc-800 rounded-3xl rounded-tl-sm border border-gray-100 hover:shadow-md'
