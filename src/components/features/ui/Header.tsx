@@ -54,7 +54,7 @@ export default function Header() {
 
   // Navigation Links Array
   // Added an 'isDummy' flag for links that shouldn't navigate anywhere yet
-  const navItems = [
+  const navItems: { name: string; path: string; isDummy?: boolean }[] = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
     { name: "Anonymous", path: "/anonymous" },
