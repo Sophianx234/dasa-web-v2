@@ -16,6 +16,7 @@ import { Providers } from "@/components/Providers";
 import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
 import Footer from "@/components/features/ui/Footer";
 import GlobalLoader from "@/components/features/ui/GlobalLoader";
+import { LayoutVisibility } from "@/components/features/ui/LayoutVisibility";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dasa.com"), // Placeholder domain, change to actual production URL
@@ -63,11 +64,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col overflow-x-clip">
         <Providers>
           <GlobalLoader />
-          <NavigationWrapper />
+          <LayoutVisibility>
+            <NavigationWrapper />
+          </LayoutVisibility>
           <div className="flex-1 flex flex-col">
             {children}
           </div>
-          <Footer />
+          <LayoutVisibility>
+            <Footer />
+          </LayoutVisibility>
         </Providers>
       </body>
     </html>
