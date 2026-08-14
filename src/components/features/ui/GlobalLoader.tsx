@@ -25,7 +25,7 @@ export default function GlobalLoader() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed inset-0 z-[9999] flex justify-center items-center h-[100dvh] w-screen bg-[#f9f7f4]"
+          className="fixed inset-0 z-[9999] flex justify-center items-center h-[100dvh] w-full bg-[#f9f7f4]"
         >
           <HashLoader loading={true} color="#18181B" size={80} />
         </motion.div>
