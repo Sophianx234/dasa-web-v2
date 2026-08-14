@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { IoMenu, IoHeart, IoClose } from "react-icons/io5";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { toggleNav } from "../slices/navSlice";
@@ -30,6 +31,7 @@ export default function Header() {
   const [showBanner, setShowBanner] = useState(true);
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
+  const pathname = usePathname();
 
   // Rotate banner text every 5 seconds
   useEffect(() => {
@@ -129,15 +131,23 @@ export default function Header() {
             }
 
             // Render standard Next Link for routes
+            const isActive = pathname === item.path || (item.path !== "/" && pathname.startsWith(item.path));
+
             return (
               <Link
                 key={item.name}
                 href={item.path}
-                className={`relative text-sm font-semibold tracking-wide py-2 transition-colors duration-300 group text-zinc-600 hover:text-zinc-900`}
+                className={`relative text-sm font-semibold tracking-wide py-2 transition-colors duration-300 group ${
+                  isActive ? "text-zinc-900" : "text-zinc-600 hover:text-zinc-900"
+                }`}
               >
                 {item.name}
                 {/* Animated Bottom Border */}
-                <span className={`absolute bottom-0 left-0 h-[2px] bg-dasadeep transition-all duration-300 w-0 group-hover:w-full`} />
+                <span 
+                  className={`absolute bottom-0 left-0 h-[2px] bg-dasadeep transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`} 
+                />
               </Link>
             );
           })}
