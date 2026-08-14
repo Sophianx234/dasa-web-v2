@@ -11,7 +11,10 @@ import { DasaLogo } from "./DasaLogo"; // Assuming you have this from previous c
 const navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
+  { name: "Anonymous", path: "/anonymous" },
+  { name: "Dues", path: "/dues" },
   { name: "Gallery", path: "/gallery" },
+  { name: "Contact", path: "/contact" },
   { name: "Login", path: "/login" },
 ];
 
