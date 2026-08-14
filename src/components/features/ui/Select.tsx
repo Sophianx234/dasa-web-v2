@@ -1,5 +1,5 @@
 import { FieldValues } from "react-hook-form";
-import { useAppSelector } from "../utils/hooks";
+
 import { formInputProps } from "./FormInput";
 
 // 1. Move static data outside the component to prevent recreation on every render
@@ -32,12 +32,12 @@ const universityOfGhanaPrograms = [
   "Diploma in Youth Development Work"
 ];
 
-const UGEL = ["Pentagon Hostels", "Evandy Hostel", "Bani Hostel"];
-const annexes = ['A', 'B', 'C', 'D'];
 const halls = [
   "Legon Hall", "Akuafo Hall", "Commonwealth Hall", "Volta Hall", "Mensah Sarbah Hall", 
   "Jean Nelson Aka Hall", "Alex A. Kwapong Hall", "Hilla Limann Hall", "Elizabeth Frances Sey Hall",
-  "Jubilee Hall", "International Students Hostel (ISH)", "Valco Trust Hostel", "UGEL Hostel", "Annex", "Other"
+  "Jubilee Hall", "International Students Hostel (ISH)", "Valco Trust Hostel",
+  "Pentagon Hostels", "Evandy Hostel", "Bani Hostel", 
+  "Annex A", "Annex B", "Annex C", "Annex D", "Other"
 ];
 
 function Select<T extends FieldValues>({ 
@@ -49,7 +49,7 @@ function Select<T extends FieldValues>({
   inputName 
 }: formInputProps<T>) {
   
-  const isAnnex = useAppSelector(store => store.user.isAnnex);
+
 
   let options: { label: string; value: string }[] = [];
 
@@ -67,13 +67,7 @@ function Select<T extends FieldValues>({
     case "hall":
       options = halls.map(h => ({ label: h, value: h }));
       break;
-    case "annex":
-      if (isAnnex === 'Annex') {
-        options = annexes.map(a => ({ label: `Annex ${a}`, value: a }));
-      } else if (isAnnex === 'UGEL Hostel') {
-        options = UGEL.map(u => ({ label: u, value: u }));
-      }
-      break;
+
     default:
       options = [];
   }

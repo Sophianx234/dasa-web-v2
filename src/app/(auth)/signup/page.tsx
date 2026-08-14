@@ -26,7 +26,6 @@ export type signupFormValues = {
   fullName: string;
   course: string;
   hall: string;
-  annex: string;
   email: string;
   contact: string;
   password: string;
@@ -41,8 +40,7 @@ export default function SignupPage() {
   const { handleSubmit, register, watch, control } =
     useForm<signupFormValues>();
   
-  // Stub for isAnnex logic
-  const isAnnex = watch("hall") === "Annex" || watch("hall") === "UGEL Hostel" ? watch("hall") : null;
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [step, setStep] = useState(1);
@@ -179,18 +177,7 @@ export default function SignupPage() {
                     />
                   </div>
 
-                  {isAnnex && (
-                    <Select
-                      register={register}
-                      inputName="annex"
-                      type="select"
-                      placeholder={`${isAnnex}`}
-                      style={inputStyle}
-                      icon={
-                        <IoBusinessOutline className="absolute left-3 text-gray-400 text-lg" />
-                      }
-                    />
-                  )}
+
 
                   <Select
                     register={register}
