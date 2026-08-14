@@ -7,8 +7,10 @@ import Footer from "@/components/features/ui/Footer";
 import PricingCard from "@/components/features/dashboard/pricing/PricingCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
-import DonationCard from "@/components/features/dashboard/pricing/DonationCard";
-import DuesCheckoutModal from "@/components/features/dashboard/pricing/DuesCheckoutModal";
+import dynamic from "next/dynamic";
+
+const DonationCard = dynamic(() => import("@/components/features/dashboard/pricing/DonationCard"), { ssr: false });
+const DuesCheckoutModal = dynamic(() => import("@/components/features/dashboard/pricing/DuesCheckoutModal"), { ssr: false });
 
 function TabListener({ setPaymentMode }: { setPaymentMode: React.Dispatch<React.SetStateAction<"Dues" | "Donation">> }) {
   const searchParams = useSearchParams();
