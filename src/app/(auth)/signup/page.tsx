@@ -20,7 +20,7 @@ import Select from "@/components/features/ui/Select";
 import Terms from "@/components/features/ui/Terms";
 import { DatePicker } from "@/components/features/ui/DatePicker";
 import { DasaLogo } from "@/components/features/ui/DasaLogo";
-// import { signupAction } from "@/app/actions/authActions";
+import { signup, uploadImages, changeProfile } from "@/services/apiServices";
 
 export type signupFormValues = {
   fullName: string;
@@ -46,6 +46,8 @@ export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [openPrivacy, setOpenPrivacy] = useState(false);
   const [openTerms, setOpenTerms] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState<string | null>(
     null,
   );
@@ -61,15 +63,69 @@ export default function SignupPage() {
     }
   }, [password, confirmPassword]);
 
-  const onSubmit: SubmitHandler<signupFormValues> = (data) => {
-    if (step < 3) {
-      setStep(step + 1);
-    } else {
-      // handleSignup(data);
-      console.log("Signup data:", data);
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+  const handleSkip = () => {
+    router.push("/dashboard");
+  };
+
+  const handleCompleteSignup = async (data: signupFormValues) => {
+    const files = data.profilePicture;
+    if (!files || files.length === 0) {
+      handleSkip();
+      return;
+    }
+    
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", files[0]);
+      
+      const uploadRes = await uploadImages(formData);
+      if (uploadRes.status === "success") {
+         const imageUrl = uploadRes.data?.secure_url || uploadRes.data?.url || uploadRes.url || "";
+         if (imageUrl) {
+           await changeProfile({ profileImage: imageUrl });
+         }
+      }
+      router.push("/dashboard");
+    } catch(err) {
+      toast.error("Failed to upload image");
+      router.push("/dashboard");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  const onSubmit: SubmitHandler<signupFormValues> = async (data) => {
+    if (step === 1) {
+      setStep(2);
+      return;
+    }
+    
+    if (step === 2) {
+      if (password !== confirmPassword) {
+        setPasswordMatchError("Passwords do not match");
+        return;
+      }
+      
+      setIsSigningUp(true);
+      try {
+        const res = await signup(data);
+        if (res.status === "success") {
+           if (res.token) localStorage.setItem("token", res.token);
+           setStep(3);
+        } else {
+           toast.error(res.message || "Failed to create account");
+        }
+      } catch (err: any) {
+        toast.error(err.message || "Something went wrong");
+      } finally {
+        setIsSigningUp(false);
+      }
+      return;
+    }
+
+    if (step === 3) {
+      await handleCompleteSignup(data);
     }
   };
 
@@ -285,9 +341,21 @@ export default function SignupPage() {
                     </button>
                     <button
                       type="submit"
-                      className="w-2/3 py-3.5 text-sm font-bold tracking-wide uppercase bg-zinc-900 text-white rounded-xl hover:bg-black hover:shadow-lg transition-all duration-300"
+                      disabled={isSigningUp}
+                      className={`w-2/3 py-3.5 text-sm font-bold tracking-wide uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2
+                        ${isSigningUp ? "bg-zinc-700 text-white/70 cursor-not-allowed" : "bg-zinc-900 text-white hover:bg-black hover:shadow-lg"}`}
                     >
-                      Continue
+                      {isSigningUp ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Creating...
+                        </>
+                      ) : (
+                        "Create Account"
+                      )}
                     </button>
                   </div>
 
@@ -359,16 +427,28 @@ export default function SignupPage() {
                   <div className="flex items-center gap-3 pt-4">
                     <button
                       type="button"
-                      onClick={() => setStep(2)}
+                      onClick={handleSkip}
                       className="w-1/3 py-3.5 flex items-center justify-center text-sm font-bold bg-gray-100 text-zinc-900 rounded-xl hover:bg-gray-200 transition-all duration-300"
                     >
-                      <IoArrowBackOutline className="text-lg" />
+                      Skip
                     </button>
                     <button
                       type="submit"
-                      className="w-2/3 py-3.5 text-sm font-bold tracking-wide uppercase bg-zinc-900 text-white rounded-xl hover:bg-black hover:shadow-lg transition-all duration-300"
+                      disabled={isUploadingImage}
+                      className={`w-2/3 py-3.5 text-sm font-bold tracking-wide uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2
+                        ${isUploadingImage ? "bg-zinc-700 text-white/70 cursor-not-allowed" : "bg-zinc-900 text-white hover:bg-black hover:shadow-lg"}`}
                     >
-                      Complete Signup
+                      {isUploadingImage ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Uploading...
+                        </>
+                      ) : (
+                        "Complete Setup"
+                      )}
                     </button>
                   </div>
                 </motion.div>
