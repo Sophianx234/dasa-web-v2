@@ -15,8 +15,10 @@ export async function POST(req: Request) {
       return new NextResponse("Missing required fields", { status: 400 });
     }
     
+    // Use the name as the persistent user_id so refreshing the page
+    // doesn't create duplicate users (since socketId changes on refresh).
     const presenceData = {
-      user_id: socketId,
+      user_id: name,
       user_info: {
         name,
         avatar,
