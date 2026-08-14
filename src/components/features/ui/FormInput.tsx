@@ -106,8 +106,10 @@ function FormInput<T extends FieldValues>({
 
   
 
+  const wrapperStyle = style ? style.replace(/focus:/g, 'focus-within:') : "";
+
   return (
-    <div className={`flex  items-center relative overflow-hidden rounded-lg ${addClass}`}>
+    <div className={`flex items-center relative overflow-hidden w-full ${wrapperStyle} ${addClass}`}>
       {icon} 
      
        {icon2}
@@ -116,20 +118,19 @@ function FormInput<T extends FieldValues>({
         <input
           type={type}
           placeholder={placeholder}
-          className={`py-2 pl-7 ${style} rounded-sm px-1 font-poppins h-full w-full outline-none
-          text-lg indent-8 focus:outline-offset-1 focus:outline-orange-300 `}
+          className={`py-3 px-1 pl-7 indent-8 font-poppins h-full w-full text-sm outline-none bg-transparent border-none focus:ring-0`}
           {...register(inputName,{})}
         required />
       ) : (
         <select
           
           {...register(inputName)}
-          className={`indent-6 font-poppins h-full w-full text-gray-400 ${style}`}
+          className={`indent-6 font-poppins h-full w-full text-gray-400 bg-transparent border-none outline-none focus:ring-0`}
         >
           <option value="">Select hall</option>
           {universityOfGhanaHostels &&
-            universityOfGhanaHostels.map((hall) => (
-              <option value={hall.name}>{hall.name}</option>
+            universityOfGhanaHostels.map((hall, idx) => (
+              <option key={idx} value={hall.name}>{hall.name}</option>
             ))}
         </select>
       )}

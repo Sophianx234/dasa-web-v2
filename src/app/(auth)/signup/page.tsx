@@ -122,7 +122,7 @@ export default function SignupPage() {
 
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full max-w-sm mx-auto relative overflow-hidden"
+            className="w-full max-w-sm mx-auto relative overflow-hidden px-1 py-1 -mx-1"
           >
             <AnimatePresence mode="wait">
               {/* === STEP 1: Personal Details === */}
