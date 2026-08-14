@@ -37,7 +37,9 @@ const halls = [
   "Jean Nelson Aka Hall", "Alex A. Kwapong Hall", "Hilla Limann Hall", "Elizabeth Frances Sey Hall",
   "Jubilee Hall", "International Students Hostel (ISH)", "Valco Trust Hostel",
   "Pentagon Hostels", "Evandy Hostel", "Bani Hostel", 
-  "Annex A", "Annex B", "Annex C", "Annex D", "Other"
+  "Mensah Sarbah Hall Annex A", "Mensah Sarbah Hall Annex B", "Mensah Sarbah Hall Annex C", "Mensah Sarbah Hall Annex D",
+  "Akuafo Hall Annex A", "Akuafo Hall Annex B", "Akuafo Hall Annex C", "Akuafo Hall Annex D", 
+  "Other"
 ];
 
 function Select<T extends FieldValues>({ 
