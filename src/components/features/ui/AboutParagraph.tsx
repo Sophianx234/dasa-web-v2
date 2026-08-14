@@ -26,17 +26,29 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
   });
 
   return (
-    <motion.div 
-      ref={ref}
-      className="relative md:sticky w-full origin-top top-0 md:top-[var(--sticky-top)] mb-8 md:mb-0"
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
-      style={{ 
-        "--sticky-top": `calc(10vh + ${index * 24}px)`,
-        willChange: "transform, opacity"
-      } as React.CSSProperties}
-    >
+    <>
+      <style dangerouslySetInnerHTML={{__html: `
+        .responsive-sticky-card-${index} {
+          position: relative;
+          top: 0;
+        }
+        @media (min-width: 768px) {
+          .responsive-sticky-card-${index} {
+            position: sticky;
+            top: calc(10vh + ${index * 24}px);
+          }
+        }
+      `}} />
+      <motion.div 
+        ref={ref}
+        className={`w-full origin-top mb-8 md:mb-0 responsive-sticky-card-${index}`}
+        initial={{ opacity: 0, y: 50 }}
+        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
+        style={{ 
+          willChange: "transform, opacity"
+        }}
+      >
       <div 
         className={`${bgColor} w-full h-auto md:h-[var(--card-height)] rounded-[2.5rem] ${isDark ? 'border-zinc-800' : 'border-black/5'} border relative overflow-hidden flex flex-col`}
         style={{
@@ -105,6 +117,7 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
         </div>
       </div>
     </motion.div>
+    </>
   );
 }
 
