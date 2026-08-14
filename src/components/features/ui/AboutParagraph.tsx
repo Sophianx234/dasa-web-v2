@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
@@ -81,10 +82,12 @@ function AboutParagraph({ title, content, index, total = 5, image, bgColor = "bg
                   {/* Physical Photo Frame */}
                   <div className="absolute inset-0 bg-white shadow-2xl rounded-2xl p-3 pb-16 ring-1 ring-black/5 flex flex-col">
                       <div className="w-full flex-grow relative rounded-xl overflow-hidden bg-gray-100">
-                          <img 
+                          <Image 
                             src={image} 
                             alt={title || "DaSA Heritage"} 
-                            className="w-full h-full object-cover transition-transform duration-1000 "
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover transition-transform duration-1000 "
                           />
                           <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-xl"></div>
                       </div>

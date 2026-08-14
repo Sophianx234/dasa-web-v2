@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Heart } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
@@ -178,10 +179,12 @@ export default function DonationCard() {
 
       {/* Right Side: Image */}
       <div className="w-full md:w-[45%] relative min-h-[300px] md:min-h-full hidden md:block">
-        <img 
+        <Image 
           src="https://i.ibb.co/dg27dzH/photo-32-2024-10-31-06-53-18.jpg" 
           alt="Students of Dagbon" 
-          className="absolute inset-0 w-full h-full object-cover object-center" 
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover object-center" 
         />
         {/* Soft overlay to blend image */}
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-900/60 via-zinc-900/40 to-transparent pointer-events-none" />

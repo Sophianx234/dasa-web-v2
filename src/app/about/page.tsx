@@ -9,7 +9,7 @@ import Values from "@/components/features/ui/Values";
 import FeaturesBanner from "@/components/features/ui/FeaturesBanner";
 
 export const metadata = {
-  title: "About DaSA - Dagbon Students Association",
+  title: "About Us",
   description: "Learn more about the Dagbon Students Association, our mission, values, and executives.",
 };
 

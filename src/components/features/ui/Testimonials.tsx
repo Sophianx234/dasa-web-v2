@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
+import Image from "next/image";
 
 // The user data combined with formatted IDs for the minimalist UI
 const testimonials = [
@@ -126,11 +127,15 @@ export default function Testimonials() {
                 {/* Author Info Block */}
                 <div className="flex items-center gap-5 md:gap-6">
                   {/* Avatar */}
-                  <img 
-                    src={testimonials[activeIndex].img} 
-                    alt={testimonials[activeIndex].name}
-                    className="w-14 h-14 md:w-16 md:h-16 rounded-full object-cover shadow-sm bg-[#ffd8a8]/20"
-                  />
+                  <div className="relative w-14 h-14 md:w-16 md:h-16">
+                    <Image 
+                      src={testimonials[activeIndex].img} 
+                      alt={testimonials[activeIndex].name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="rounded-full object-cover shadow-sm bg-[#ffd8a8]/20"
+                    />
+                  </div>
                   
                   {/* Decorative Line */}
                   <span className="hidden md:block h-[1px] w-12 bg-[#33312e]/20" />

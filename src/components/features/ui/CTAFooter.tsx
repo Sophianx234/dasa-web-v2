@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
@@ -35,10 +36,12 @@ function CTAFooter() {
           viewport={{ once: true }}
           className="absolute inset-0 w-full h-full"
         >
-          <img
+          <Image
             src={imageUrl}
             alt="Association members together"
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
           />
           {/* Refined gradient: purely darkens the image to blend seamlessly without looking muddy */}
           <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#33312e] via-[#33312e]/60 to-transparent mix-blend-multiply"></div>

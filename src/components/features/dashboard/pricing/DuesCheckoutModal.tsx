@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, ShieldCheck } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
@@ -172,10 +173,12 @@ export default function DuesCheckoutModal({ isOpen, onClose, selectedPackage }: 
 
           {/* Right Side: Image */}
           <div className="w-full md:w-[45%] relative min-h-[300px] md:min-h-full hidden md:block bg-gray-100">
-            <img 
+            <Image 
               src={selectedPackage.image || "https://i.ibb.co/wZ3SdYx2/e-5.jpg"} 
               alt={selectedPackage.title} 
-              className="absolute inset-0 w-full h-full object-cover object-center" 
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover object-center" 
             />
             {/* Soft overlay to blend image into the white form */}
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-900 via-zinc-900/40 to-transparent pointer-events-none" />

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { formatDate } from "@/components/features/utils/helpers"
 import { FaRegCalendar } from "react-icons/fa6"
 import { IoCloseOutline } from "react-icons/io5"
@@ -39,14 +40,14 @@ function Event({eventInfo,type ='normal'}:eventProps) {
 
             
             
-            <div className="relative ">
+            <div className="relative w-full h-80">
                 <div>      {type ==='control'&&
                     <div className="p-1  rounded-full  top-0 right-1 absolute bg-white">
                         <IoCloseOutline onClick={()=>handleDeleteEvent(eventInfo._id)} className="size-6  stroke-red-400  "/>
                             </div>
                             }
                 </div>
-            <img src={eventInfo.eventImage} alt="d-2" className=" w-full h-80 object-cover object-center"/>
+            <Image src={eventInfo.eventImage} alt="d-2" fill sizes='(max-width: 768px) 100vw, 50vw' className="object-cover object-center"/>
             </div>
             <div className="space-y-2">
                 

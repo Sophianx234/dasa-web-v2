@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import PricingCheck from "./PricingCheck";
 import { ArrowRight } from "lucide-react";
 
@@ -111,7 +112,7 @@ export default function PricingCard({
         {/* Right Side: Image */}
         {image && (
           <div className="hidden md:block md:w-[30%] relative">
-            <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover object-center" />
+            <Image src={image} alt={title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover object-center" />
             <div className={`absolute inset-0 bg-gradient-to-r ${gradientClass} pointer-events-none`} />
           </div>
         )}

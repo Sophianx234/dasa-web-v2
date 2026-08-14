@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { MdFileDownload } from "react-icons/md";
 
@@ -76,11 +77,15 @@ export default function ConstitutionSection() {
             <div className="absolute inset-0 translate-x-6 translate-y-6 md:translate-x-8 md:translate-y-8 rounded-[2rem] border-2 border-[#161412]/10 z-0 transition-transform duration-500  "></div>
             
             {/* Main Image */}
-            <img
-              src="https://i.ibb.co/nqZ0QJYf/winners-brain-Made-with-Poster-My-Wall.jpg"
-              alt="DaSA Constitution Cover"
-              className="relative w-full h-auto object-contain rounded-[2rem] shadow-2xl z-10"
-            />
+            <div className="relative w-full aspect-[3/4] z-10">
+              <Image
+                src="https://i.ibb.co/nqZ0QJYf/winners-brain-Made-with-Poster-My-Wall.jpg"
+                alt="DaSA Constitution Cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain rounded-[2rem] shadow-2xl"
+              />
+            </div>
 
             {/* Floating Glassmorphism Badge */}
             <motion.div 

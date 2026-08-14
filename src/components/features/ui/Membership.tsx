@@ -6,6 +6,7 @@ import { CiLock } from "react-icons/ci";
 import { BsIncognito } from "react-icons/bs";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 function Membership() {
   const benefits = [
@@ -79,10 +80,12 @@ function Membership() {
             <div className="absolute inset-0 bg-[#ffd8a8] rounded-3xl rotate-3 group-hover:rotate-2 transition-transform duration-500 opacity-60"></div>
             
             <div className="relative h-full min-h-[400px] rounded-3xl overflow-hidden shadow-2xl">
-              <img 
+              <Image 
                 src="https://i.ibb.co/BN6WBpn/photo-30-2024-10-31-06-53-18.jpg"
                 alt="DaSA Community"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#33312e]/50 via-transparent to-transparent"></div>
             </div>

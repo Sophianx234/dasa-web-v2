@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import CountUp from "react-countup";
+import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import { motion } from "framer-motion";
 import { MessageSquare, UsersRound, Globe } from "lucide-react";
@@ -30,10 +31,12 @@ export default function Impact() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="order-2 lg:order-1 relative w-full aspect-[4/3] md:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl group"
         >
-          <img
+          <Image
             src={IMPACT_IMAGE_SRC}
             alt="Dagbon Students Association Impact"
-            className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-1000 "
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover transform transition-transform duration-1000 "
           />
           {/* Subtle overlay to give the image a cinematic, premium depth */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#33312e]/60 via-[#33312e]/10 to-transparent mix-blend-multiply"></div>

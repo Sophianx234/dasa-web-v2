@@ -4,7 +4,7 @@ import BriefGallery from "@/components/features/dashboard/components/BriefGaller
 import Footer from "@/components/features/ui/Footer";
 
 export const metadata = {
-  title: "Gallery - Dagbon Students Association",
+  title: "Gallery",
   description: "Explore the visual history and events of the Dagbon Students Association.",
 };
 

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Clipboard, DollarSign, FileText, Layers, MessageCircle, Settings, User, UserCheck, Users, Crown, Shield } from "lucide-react";
 import { QuoteUp as Quote } from "./QuoteUp";
 import Executive from "./Executive";
@@ -268,10 +269,12 @@ function ExecutivesSection() {
                         transition={{ duration: 0.8, ease: "easeOut" }}
                         className="relative aspect-[4/5] w-full rounded-[2rem] overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-[#33312e]/[0.03] bg-[#faf9f7]"
                       >
-                        <img
+                        <Image
                           src={ex.img}
                           alt={ex.name}
-                          className="absolute inset-0 w-full h-full object-cover object-top transform transition-transform duration-700 "
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover object-top transform transition-transform duration-700 "
                         />
                         {/* Subtle gradient overlay to ensure the image sits deeply in the frame */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />

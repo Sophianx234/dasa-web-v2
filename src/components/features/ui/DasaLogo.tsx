@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 
 export type LogoProps = {
@@ -33,9 +34,12 @@ export function DasaLogo({ title, clns = "" }: LogoProps) {
 
   return (
     <Link href="/" className={`flex items-center gap-2 sm:gap-3 md:gap-4 ${clns}`}>
-      <img
+      <Image
         src="https://i.ibb.co/n8hRM6d/dasalogo-removebg.png"
         alt="DaSA Logo"
+        width={64}
+        height={64}
+        sizes="(max-width: 768px) 100vw, 50vw"
         // Scaled down image sizes for smaller screens to ensure it all fits
         className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain drop-shadow-sm"
       />

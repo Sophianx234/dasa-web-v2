@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const coreValues = [
   {
@@ -72,10 +73,12 @@ export default function Values() {
               
               {/* Visual/Image Side */}
               <div className="w-full lg:w-1/2 h-[400px] lg:h-[600px] relative overflow-hidden group">
-                <img 
+                <Image 
                   src={value.imgSrc} 
                   alt={value.title} 
-                  className="w-full h-full object-cover scale-100  transition-transform duration-1000 ease-out"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover scale-100  transition-transform duration-1000 ease-out"
                 />
                 {/* Subtle dark overlay to match the theme */}
                 <div className="absolute inset-0 bg-[#161412]/20 group-hover:bg-transparent transition-colors duration-700" />

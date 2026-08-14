@@ -1,5 +1,6 @@
 "use client";
 import Socials from "./Socials";
+import Image from "next/image";
 
 export type executiveProps = {
   imgUrl: string;
@@ -11,11 +12,15 @@ export type executiveProps = {
 function Executive({ imgUrl, name, role, desc }: executiveProps) {
   return (
     <div className="flex flex-col justify-center items-center border-b-2 pb-10 border-dasalight">
-      <img
-        src={imgUrl}
-        alt={name}
-        className="h-[15.8rem] w-60 scale-75 rounded-full object-cover"
-      />
+      <div className="relative h-[15.8rem] w-60 scale-75">
+        <Image
+          src={imgUrl}
+          alt={name}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="rounded-full object-cover"
+        />
+      </div>
 
       <div className="text-center px-2 mt-4">
         <h1 className="font-bold text-lg text-[#4c4945]">{name}</h1>
