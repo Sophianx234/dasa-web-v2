@@ -11,6 +11,13 @@ import Questions from "@/components/features/ui/Questions";
 import Testimonials from "@/components/features/ui/Testimonials";
 import BriefGallery from "@/components/features/dashboard/components/BriefGallery";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dagbon Students Association (DaSA) | UG Branch",
+  description: "Welcome to the official website of the Dagbon Students Association, University of Ghana Branch. Join our vibrant community of students celebrating Dagbon heritage.",
+};
+
 export default function Home() {
   return (
     <div className="">

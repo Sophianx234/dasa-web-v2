@@ -1,6 +1,7 @@
 "use client";
 import { FaArrowRight } from "react-icons/fa6";
 import Link from "next/link";
+import Image from "next/image";
 
 import { motion } from "framer-motion";
 import { Users, BookOpen, Globe } from "lucide-react";
@@ -32,17 +33,19 @@ function BriefAbout() {
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
         
         {/* Image Section */}
-     <motion.div
-          className="flex-shrink-0 w-full md:w-1/3"
+      <motion.div
+          className="flex-shrink-0 w-full md:w-1/3 relative h-[300px] md:h-[450px]"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <img
+          <Image
             src="https://i.ibb.co/9VBBqSG/photo-57-2024-10-31-06-52-36.jpg"
             alt="DaSA Community"
-            className="w-full h-auto rounded-xl shadow-lg object-cover hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="rounded-xl shadow-lg object-cover hover:scale-105 transition-transform duration-500"
           />
         </motion.div>
         {/* Text Content + Features */}
