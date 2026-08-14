@@ -73,7 +73,7 @@ function VideoPlayer({ src,id,control = 'normal' }: videoPlayerProps) {
 
 
   return (
-    <>
+    <div className="relative w-full">
     <span
       ref={targetRef}
       
@@ -116,12 +116,12 @@ function VideoPlayer({ src,id,control = 'normal' }: videoPlayerProps) {
         </div>
         
     </span>
-    <div className="pb-12 hidden sm:block">
-
+    {/* svg container */}
+    <div className="pb-8 hidden    translate-x-36 sm:block pointer-events-none">
         <SVGLite type="lines"  />
     </div>
     <Toaster/>
-    </>
+    </div>
   );
 
 
