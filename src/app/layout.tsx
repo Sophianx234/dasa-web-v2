@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 import { Providers } from "@/components/Providers";
 import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
 import Footer from "@/components/features/ui/Footer";
+import GlobalLoader from "@/components/features/ui/GlobalLoader";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dasa.com"), // Placeholder domain, change to actual production URL
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
+          <GlobalLoader />
           <NavigationWrapper />
           <div className="flex-1 flex flex-col">
             {children}
