@@ -65,7 +65,7 @@ export default function LoginPage() {
       if (res.status === "success") {
         setIsLoggedIn(true);
         setUser(res.user);
-        router.push("/dashboard");
+        router.push("/account");
       } else {
         setServerError(res.message || "Invalid email or password");
       }

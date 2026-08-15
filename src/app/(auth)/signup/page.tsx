@@ -75,7 +75,7 @@ export default function SignupPage() {
       if (res.status === "success") {
          setIsLoggedIn(true);
          setUser(res.user);
-         router.push("/dashboard");
+         router.push("/account");
       } else {
          setServerError(res.message || "Failed to create account");
       }
@@ -127,7 +127,7 @@ export default function SignupPage() {
         if (res.status === "success") {
            setIsLoggedIn(true);
            setUser(res.user);
-           router.push("/dashboard");
+           router.push("/account");
         } else {
            setServerError(res.message || "Failed to create account");
         }

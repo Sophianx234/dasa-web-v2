@@ -192,18 +192,27 @@ export default function Header() {
             <div className="relative hidden sm:flex items-center h-full z-50" ref={userMenuRef}>
               <button 
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center gap-2 bg-zinc-900 text-[#FEF3E7] font-bold text-sm py-2.5 px-4 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
+                className="flex items-center gap-2 text-zinc-700 hover:text-zinc-900 font-bold text-sm transition-colors duration-300 focus:outline-none"
               >
-                <User className="w-[18px] h-[18px]" strokeWidth={1.5} />
-                <span className="truncate max-w-[100px]">
+                {user?.profileImage ? (
+                  <img 
+                    src={user.profileImage} 
+                    alt="User Avatar" 
+                    className="w-9 h-9 rounded-full object-cover border border-zinc-200" 
+                  />
+                ) : (
+                  <User className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                )}
+                <div className="truncate max-w-[100px]">
+                  <span>Hello, </span>
                   {user?.fullName ? user.fullName.split(" ")[0] : "Account"}
-                </span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
+                </div>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 text-zinc-400 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
               </button>
 
               <div className={`absolute top-[3.5rem] right-0 pt-2 w-48 transition-all duration-300 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                 <div className={`relative bg-white rounded-xl border border-zinc-200 shadow-xl overflow-hidden flex flex-col transform transition-transform duration-300 ${isUserMenuOpen ? 'translate-y-0' : 'translate-y-2'}`}>
-                    <Link href="/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors">
+                    <Link href="/account" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors">
                       <User className="w-4 h-4" /> My Profile
                     </Link>
                     <button onClick={() => { handleLogout(); setIsUserMenuOpen(false); }} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors w-full text-left">

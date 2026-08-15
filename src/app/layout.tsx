@@ -17,6 +17,8 @@ import NavigationWrapper from "@/components/features/ui/NavigationWrapper";
 import Footer from "@/components/features/ui/Footer";
 import GlobalLoader from "@/components/features/ui/GlobalLoader";
 import { LayoutVisibility } from "@/components/features/ui/LayoutVisibility";
+import StoreInitializer from "@/components/StoreInitializer";
+import { getUserAction } from "@/app/actions/apiActions";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://dasa.com"), // Placeholder domain, change to actual production URL
@@ -50,7 +52,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  let user = null;
+  try {
+    const userRes = await getUserAction("");
+    if (userRes?.status === "success") user = userRes.user;
+  } catch (err) {
+    // No session
+  }
+
   return (
     <html
       lang="en"
@@ -64,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col overflow-x-clip">
         <Providers>
+          <StoreInitializer user={user} />
           <GlobalLoader />
           <LayoutVisibility>
             <NavigationWrapper />
