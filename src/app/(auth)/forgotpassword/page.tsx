@@ -5,7 +5,7 @@ import Link from "next/link";
 import { IoMailOutline, IoArrowBackOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import { Toaster } from "react-hot-toast";
+
 import FormInput from "@/components/features/ui/FormInput";
 import { DasaLogo } from "@/components/features/ui/DasaLogo";
 // import { forgotPasswordAction } from "@/app/actions/authActions";
@@ -17,6 +17,7 @@ type forgotpassFormValues = {
 export default function ForgotPasswordPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<forgotpassFormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const onSubmit = async (data: forgotpassFormValues) => {
     if (!data.email) return;
@@ -42,9 +43,12 @@ export default function ForgotPasswordPage() {
 
     if (result.isConfirmed) {
       setIsSubmitting(true);
+      setServerError(null);
       try {
         // await forgotPasswordAction(data.email);
         console.log("Forgot password for:", data.email);
+      } catch (err: any) {
+        setServerError(err.message || "Failed to send reset link");
       } finally {
         setIsSubmitting(false);
       }
@@ -93,6 +97,12 @@ export default function ForgotPasswordPage() {
                 </motion.p>
               )}
             </div>
+
+            {serverError && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-500 font-medium px-1 text-center">
+                {serverError}
+              </motion.p>
+            )}
 
             {/* Submit Button */}
             <button
@@ -153,7 +163,7 @@ export default function ForgotPasswordPage() {
         </div>
       </motion.div>
 
-      <Toaster position="top-center" toastOptions={{ className: 'font-poppins text-sm rounded-2xl shadow-xl' }} />
+
     </div>
   );
 }

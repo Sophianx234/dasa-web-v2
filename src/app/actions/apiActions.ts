@@ -9,11 +9,14 @@ import Message from "@/models/messagesModel";
 import Notification from "@/models/notifications";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import { cookies } from "next/headers";
 
 // Helper to verify token
 const verifyToken = async (token?: string | null) => {
-  if (!token) throw new Error("Not logged in");
-  const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+  const cookieStore = await cookies();
+  const activeToken = token || cookieStore.get('token')?.value;
+  if (!activeToken) throw new Error("Not logged in");
+  const decoded: any = jwt.verify(activeToken, process.env.JWT_SECRET as string);
   const user = await User.findById(decoded.id);
   if (!user) throw new Error("User no longer exists");
   return user;
@@ -33,6 +36,15 @@ export async function loginAction(creds: any) {
     const userObj = user.toObject() as any;
     userObj.password = undefined;
     userObj._id = userObj._id.toString();
+    
+    const cookieStore = await cookies();
+    cookieStore.set('token', token, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 24 * 60 * 60, 
+      path: '/' 
+    });
+
     return { status: "success", token, user: userObj };
   } catch (error: any) {
     return { status: "fail", message: error.message };
@@ -42,11 +54,29 @@ export async function loginAction(creds: any) {
 export async function signupAction(userInfo: any) {
   try {
     await connectToDatabase();
+    
+    if (userInfo.email) {
+      const existingUser = await User.findOne({ email: userInfo.email });
+      if (existingUser) {
+        return { status: "fail", message: "Email is already in use" };
+      }
+    }
+
+    console.log("Signup userInfo received:", userInfo);
+
     const newUser = await User.create(userInfo);
     const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
-    const userObj = newUser.toObject() as any;
+    const userObj = JSON.parse(JSON.stringify(newUser));
     userObj.password = undefined;
-    userObj._id = userObj._id.toString();
+    
+    const cookieStore = await cookies();
+    cookieStore.set('token', token, { 
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production', 
+      maxAge: 24 * 60 * 60, 
+      path: '/' 
+    });
+
     return { status: "success", token, user: userObj };
   } catch (error: any) {
     return { status: "fail", message: error.message };
@@ -54,6 +84,8 @@ export async function signupAction(userInfo: any) {
 }
 
 export async function logoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete('token');
   return { status: "success" };
 }
 

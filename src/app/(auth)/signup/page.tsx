@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
+
 import {
   IoLockClosedOutline,
   IoMailOutline,
@@ -21,6 +21,7 @@ import Terms from "@/components/features/ui/Terms";
 import { DatePicker } from "@/components/features/ui/DatePicker";
 import { DasaLogo } from "@/components/features/ui/DasaLogo";
 import { signup, uploadImages, changeProfile } from "@/services/apiServices";
+import { setIsLoggedIn, setUser } from "@/components/features/slices/navSlice";
 
 export type signupFormValues = {
   fullName: string;
@@ -37,7 +38,7 @@ export type signupFormValues = {
 
 export default function SignupPage() {
   const router = useRouter();
-  const { handleSubmit, register, watch, control } =
+  const { handleSubmit, register, watch, control, getValues } =
     useForm<signupFormValues>();
   
 
@@ -48,6 +49,7 @@ export default function SignupPage() {
   const [openTerms, setOpenTerms] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [passwordMatchError, setPasswordMatchError] = useState<string | null>(
     null,
   );
@@ -63,33 +65,78 @@ export default function SignupPage() {
     }
   }, [password, confirmPassword]);
 
-  const handleSkip = () => {
-    router.push("/dashboard");
+  const handleSkip = async () => {
+    const data = getValues();
+    const { profilePicture, ...cleanData } = data;
+    setIsSigningUp(true);
+    setServerError(null);
+    try {
+      const res = await signup(cleanData);
+      if (res.status === "success") {
+         setIsLoggedIn(true);
+         setUser(res.user);
+         router.push("/dashboard");
+      } else {
+         setServerError(res.message || "Failed to create account");
+      }
+    } catch (err: any) {
+      setServerError(err.message || "An unexpected error occurred");
+    } finally {
+      setIsSigningUp(false);
+    }
   };
 
   const handleCompleteSignup = async (data: signupFormValues) => {
     const files = data.profilePicture;
     if (!files || files.length === 0) {
-      handleSkip();
+      await handleSkip();
       return;
     }
     
     setIsUploadingImage(true);
+    setServerError(null);
     try {
       const formData = new FormData();
       formData.append("file", files[0]);
       
-      const uploadRes = await uploadImages(formData);
-      if (uploadRes.status === "success") {
-         const imageUrl = uploadRes.data?.secure_url || uploadRes.data?.url || uploadRes.url || "";
-         if (imageUrl) {
-           await changeProfile({ profileImage: imageUrl });
-         }
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "dasa_preset";
+      formData.append("upload_preset", uploadPreset);
+      
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dtytb8qrc";
+      const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+      const uploadRes = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        const errorData = await uploadRes.json().catch(() => ({}));
+        console.error("Cloudinary Error:", errorData);
+        throw new Error(`Cloudinary Error: ${errorData.error?.message || 'Failed to upload image'}`);
       }
-      router.push("/dashboard");
-    } catch(err) {
-      toast.error("Failed to upload image");
-      router.push("/dashboard");
+
+      const uploadData = await uploadRes.json();
+      const imageUrl = uploadData.secure_url;
+      
+      if (imageUrl) {
+        const { profilePicture, ...cleanData } = data;
+        const finalData = { ...cleanData, profileImage: imageUrl };
+        setIsSigningUp(true);
+        const res = await signup(finalData);
+        if (res.status === "success") {
+           setIsLoggedIn(true);
+           setUser(res.user);
+           router.push("/dashboard");
+        } else {
+           setServerError(res.message || "Failed to create account");
+        }
+        setIsSigningUp(false);
+      } else {
+        await handleSkip();
+      }
+    } catch(err: any) {
+      setServerError(err.message || "Failed to upload image");
     } finally {
       setIsUploadingImage(false);
     }
@@ -106,21 +153,8 @@ export default function SignupPage() {
         setPasswordMatchError("Passwords do not match");
         return;
       }
-      
-      setIsSigningUp(true);
-      try {
-        const res = await signup(data);
-        if (res.status === "success") {
-           if (res.token) localStorage.setItem("token", res.token);
-           setStep(3);
-        } else {
-           toast.error(res.message || "Failed to create account");
-        }
-      } catch (err: any) {
-        toast.error(err.message || "Something went wrong");
-      } finally {
-        setIsSigningUp(false);
-      }
+      // Just progress to step 3 without creating user yet!
+      setStep(3);
       return;
     }
 
@@ -159,22 +193,10 @@ export default function SignupPage() {
               Create Account.
             </h1>
             <p className="text-[#33312e]/70 text-sm font-poppins mt-1">
-              Step {step} of 3. Already registered?{" "}
-              <Link
-                href="/login"
-                className="text-zinc-900 font-semibold hover:underline transition-colors"
-              >
-                Log in
-              </Link>
+              Step {step} of 3. 
             </p>
           </div>
 
-          <Toaster
-            position="top-center"
-            toastOptions={{
-              className: "font-poppins text-sm rounded-2xl shadow-xl",
-            }}
-          />
 
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -331,6 +353,12 @@ export default function SignupPage() {
                     .
                   </div>
 
+                  {serverError && (
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-500 font-medium px-1">
+                      {serverError}
+                    </motion.p>
+                  )}
+
                   <div className="flex items-center gap-3 pt-2">
                     <button
                       type="button"
@@ -423,6 +451,12 @@ export default function SignupPage() {
                       </div>
                     )}
                   </div>
+
+                  {serverError && (
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-500 font-medium px-1">
+                      {serverError}
+                    </motion.p>
+                  )}
 
                   <div className="flex items-center gap-3 pt-4">
                     <button

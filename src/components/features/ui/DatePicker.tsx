@@ -28,7 +28,7 @@ export function DatePicker<T extends FieldValues>({field,type='normal'}:datePick
         <Button 
           variant={"outline"}
           className={cn(
-            "w-full py-6 justify-start text-left font-normal bg-white hover:bg-white hover:text-current hover:border-gray-300",
+            "w-full py-6 justify-start text-left font-normal bg-white hover:bg-white shadow-none hover:text-current hover:border-gray-300",
             !date && "text-muted-foreground"
           )}
         >

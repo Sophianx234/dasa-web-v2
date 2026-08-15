@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
+
 import {
   IoEyeOutline,
   IoEyeOffOutline,
@@ -14,7 +14,8 @@ import Switch from "react-switch";
 import { motion } from "framer-motion";
 import FormInput from "@/components/features/ui/FormInput";
 import { DasaLogo } from "@/components/features/ui/DasaLogo";
-// import { loginAction } from "@/app/actions/authActions"; // Will create this later if needed
+import { login } from "@/services/apiServices";
+import { setIsLoggedIn, setUser } from "@/components/features/slices/navSlice";
 
 export type loginFormValues = {
   email: string;
@@ -33,6 +34,7 @@ export default function LoginPage() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [viewPass, setViewPass] = useState<"text" | "password">("password");
+  const [serverError, setServerError] = useState<string | null>(null);
 
   // Pre-fill email if "Remember Me" was used previously
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function LoginPage() {
 
   const onSubmit: SubmitHandler<loginFormValues> = async (data) => {
     setIsLoggingIn(true);
+    setServerError(null);
 
     if (!data.email || !data.password) {
       setIsLoggingIn(false);
@@ -58,12 +61,16 @@ export default function LoginPage() {
     }
 
     try {
-      // Stub for server action
-      // await loginAction(data);
-      console.log("Login data:", data);
-      setTimeout(() => {
+      const res = await login(data);
+      if (res.status === "success") {
+        setIsLoggedIn(true);
+        setUser(res.user);
         router.push("/dashboard");
-      }, 1000);
+      } else {
+        setServerError(res.message || "Invalid email or password");
+      }
+    } catch (err: any) {
+      setServerError(err.message || "Failed to log in");
     } finally {
       setIsLoggingIn(false);
     }
@@ -199,12 +206,18 @@ export default function LoginPage() {
               </Link>
             </div>
 
+            {serverError && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-red-500 font-medium px-1 text-center">
+                {serverError}
+              </motion.p>
+            )}
+
             {/* Submit Button */}
             <button
               disabled={isLoggingIn}
               className={`w-full relative flex items-center justify-center gap-2 rounded-lg py-3.5 text-sm font-bold tracking-wide transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-dasalight ${
                 isLoggingIn
-                  ? "bg-dasalight/70 cursor-not-allowed text-[#33312e]/50"
+                  ? " bg-zinc-900 text-white"
                   : "bg-zinc-900 text-white"
               }`}
             >
@@ -261,7 +274,6 @@ export default function LoginPage() {
         </div>
       </motion.div>
 
-      <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
     </div>
   );
 }

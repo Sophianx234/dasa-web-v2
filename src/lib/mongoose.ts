@@ -41,11 +41,7 @@ async function connectToDatabase() {
     cached.promise = mongoose.connect(uri, opts)
       .then((mongoose) => mongoose)
       .catch((err) => {
-        console.error("Primary DB connection failed:", err.message);
-        if (DATABASE_LOCAL) {
-          console.log("Falling back to DATABASE_LOCAL...");
-          return mongoose.connect(DATABASE_LOCAL, opts).then((mongoose) => mongoose);
-        }
+        console.error("Database connection failed:", err.message);
         throw err;
       });
   }

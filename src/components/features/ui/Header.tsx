@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { toggleNav } from "../slices/navSlice";
+import { toggleNav, setIsLoggedIn, setUser } from "../slices/navSlice";
 import { DasaLogo } from "./DasaLogo";
-import { HandHeart } from "lucide-react";
+import { HandHeart, User, ChevronDown, LogOut } from "lucide-react";
+import { useAppStore } from "@/store";
+import { logoutAction } from "@/app/actions/apiActions";
 
 const bannerEvents = [
   {
@@ -32,6 +34,26 @@ export default function Header() {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
+  
+  const { isLoggedIn, user } = useAppStore((state) => state.nav);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutAction();
+    setIsLoggedIn(false);
+    setUser({});
+  };
 
   // Rotate banner text every 5 seconds
   useEffect(() => {
@@ -165,13 +187,39 @@ export default function Header() {
             Make Donation
           </Link>
 
-          {/* Desktop Login Button */}
-          <Link
-            href="/login"
-            className="hidden sm:flex items-center justify-center bg-zinc-900 text-[#FEF3E7] font-bold text-sm py-2.5 px-7 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-          >
-            Login
-          </Link>
+          {/* User Profile / Login */}
+          {isLoggedIn ? (
+            <div className="relative hidden sm:flex items-center h-full z-50" ref={userMenuRef}>
+              <button 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center gap-2 bg-zinc-900 text-[#FEF3E7] font-bold text-sm py-2.5 px-4 rounded-full shadow-md hover:shadow-lg transition-all duration-300 group"
+              >
+                <User className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                <span className="truncate max-w-[100px]">
+                  {user?.fullName ? user.fullName.split(" ")[0] : "Account"}
+                </span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
+              </button>
+
+              <div className={`absolute top-[3.5rem] right-0 pt-2 w-48 transition-all duration-300 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                <div className={`relative bg-white rounded-xl border border-zinc-200 shadow-xl overflow-hidden flex flex-col transform transition-transform duration-300 ${isUserMenuOpen ? 'translate-y-0' : 'translate-y-2'}`}>
+                    <Link href="/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors">
+                      <User className="w-4 h-4" /> My Profile
+                    </Link>
+                    <button onClick={() => { handleLogout(); setIsUserMenuOpen(false); }} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors w-full text-left">
+                       <LogOut className="w-4 h-4" /> Logout
+                    </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden sm:flex items-center justify-center bg-zinc-900 text-[#FEF3E7] font-bold text-sm py-2.5 px-7 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              Login
+            </Link>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button

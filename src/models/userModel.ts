@@ -3,9 +3,7 @@ import mongoose, { Document } from "mongoose";
 import bcrypt from "bcrypt";
 import { Model } from "mongoose";
 import crypto from "crypto";
-import { genRandomName } from "../utils/helpers";
 export type userDocument = Document & {
-  username: string;
   fullName: string;
   email: string;
   password: string;
@@ -18,9 +16,7 @@ export type userDocument = Document & {
   profileImage?: string;
   bio?: string;
   sex: "male" | "female";
-  birthDate: Date
-  anonymousName: string;
-  anonymousProfile: string;
+  birthDate: Date;
   confirmPassword?: string | boolean | null;
   createdAt?: Date;
   passwordChangedAt: Date;
@@ -37,9 +33,8 @@ export type userDocument = Document & {
 type userModel = Model<userDocument>;
 
 const userSchema = new mongoose.Schema<userDocument>({
-  username: String,
   fullName: { type: String, required: [true, "fullname is required"] },
-  email: { type: String, required: [true, "email is required"] },
+  email: { type: String, required: [true, "email is required"], unique: true },
   password: {
     type: String,
     required: [true, "password is required"],
@@ -52,17 +47,10 @@ const userSchema = new mongoose.Schema<userDocument>({
   course: String,
   profileImage: {
     type: String,
-    default: "https://i.ibb.co/BCqPkTT/default-img.jpg",
   },
-  birthDate:Date
-  ,
+  birthDate:Date,
   bio: String,
-  anonymousName:String,
-
   sex:String,
-  anonymousProfile: {
-    type: String,
-  },
 
   status: {
     type: String,
@@ -93,34 +81,20 @@ const userSchema = new mongoose.Schema<userDocument>({
   passwordResetExpires: Date,
 });
 
-userSchema.pre("save", async function (this: userDocument, next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function (this: userDocument) {
+  if (!this.isModified("password")) return;
 
   this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
 });
 
-userSchema.pre("save", async function (this: userDocument, next) {
-  if (!this.isModified("password") || this.isNew) return next();
+userSchema.pre("save", async function (this: userDocument) {
+  if (!this.isModified("password") || this.isNew) return;
   this.passwordChangedAt = new Date(Date.now() - 1000);
-  next();
 });
 
-userSchema.pre(/^find/, function (this: any, next) {
+userSchema.pre(/^find/, function (this: any) {
   this.find({ active: { $ne: false } });
-  next();
-});
-userSchema.pre("save", function (this: userDocument, next) {
-  if(this.isNew){
-
-    this.username = this.fullName;
-    this.anonymousProfile = this.sex === "male"
-    ? "https://res.cloudinary.com/dtytb8qrc/image/upload/v1738576015/Dasa/users/bwg76dwwvyte11f71jah.jpg"
-    : "https://res.cloudinary.com/dtytb8qrc/image/upload/v1738576016/Dasa/users/ocmq2tel9kfwdb5ew6ej.jpg";
-    this.anonymousName = genRandomName()
-  }
-
-  next();
 });
 
 userSchema.methods.isCorrectPassword = async function (

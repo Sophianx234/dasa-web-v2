@@ -1,5 +1,6 @@
 "use client";
-import { Toaster } from "react-hot-toast";
+
+import { useState } from "react";
 import { FaArrowLeft, FaRegUser } from "react-icons/fa6";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
@@ -20,18 +21,29 @@ export default function ResetPasswordPage() {
   const token = params.token as string;
   
   const { register, handleSubmit } = useForm<resetPassFormValues>();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (body: resetPassFormValues) => {
-    console.log("Reset body:", body);
-    console.log("token", token);
-    if (body.pass !== body.confirmPass) return;
+    setServerError(null);
+    if (body.pass !== body.confirmPass) {
+      setServerError("Passwords do not match");
+      return;
+    }
     
     if (token) {
-      // await resetPasswordAction({ token, pass: body.pass });
-      console.log("Resetting password with token:", token);
-      setTimeout(() => {
-        router.push("/login");
-      }, 1000);
+      setIsSubmitting(true);
+      try {
+        // await resetPasswordAction({ token, pass: body.pass });
+        console.log("Resetting password with token:", token);
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
+      } catch (err: any) {
+        setServerError(err.message || "Failed to reset password");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -89,6 +101,13 @@ export default function ResetPasswordPage() {
               </div>
             </div>
           </div>
+          
+          {serverError && (
+            <p className="text-sm text-red-500 font-medium px-1 mt-3 text-center">
+              {serverError}
+            </p>
+          )}
+
           <button className="rounded-full bg-dasadeep mt-3 border border-dasadeep hover:border-[#191611] hover:bg-transparent transition-all duration-300 py-2 text-sm font-bold font-poppins">
             Reset Password
           </button>
@@ -101,7 +120,6 @@ export default function ResetPasswordPage() {
               <FaArrowLeft /> Back to Home
             </Link>
           </div>
-          <Toaster />
         </form>
       </FormWrapper>
     </div>

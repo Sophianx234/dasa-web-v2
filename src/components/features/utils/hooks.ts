@@ -123,7 +123,6 @@ export function useLogin(navigate: any) {
       
       dispatch(setIsLoggedIn(true))
       dispatch(setUser(data.user))
-      localStorage.setItem('token',data.token)
       setTimeout(() => {
         toast.dismiss();
         navigate("/dashboard/overview");
