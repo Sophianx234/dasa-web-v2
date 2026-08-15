@@ -41,6 +41,8 @@ export default function Header() {
   
   const [isNotifMenuOpen, setIsNotifMenuOpen] = useState(false);
   const notifMenuRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollDown, setCanScrollDown] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [dismissedNotifs, setDismissedNotifs] = useState<string[]>([]);
 
@@ -88,6 +90,21 @@ export default function Header() {
     setDismissedNotifs(newDismissed);
     localStorage.setItem("dasa_dismissed_notifs", JSON.stringify(newDismissed));
   };
+
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+      setCanScrollDown(scrollTop + clientHeight < scrollHeight - 2); // 2px buffer
+    }
+  };
+
+  // Check scroll on notifications load or menu toggle
+  useEffect(() => {
+    if (isNotifMenuOpen) {
+      // Slight delay to allow DOM render
+      setTimeout(checkScroll, 50);
+    }
+  }, [isNotifMenuOpen, notifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -252,7 +269,7 @@ export default function Header() {
                   className="relative p-2 text-zinc-600 hover:text-zinc-900 transition-colors focus:outline-none rounded-full ">
                 <Bell className="w-[20px] h-[20px]" strokeWidth={1.5} />
                 {notifications.length > 0 && (
-                  <span className="absolute top-1 right-1.5 font-extrabold w-3 h-3 flex items-center justify-center  text-[6px] bg-dasadeep rounded-full border border-white" >{notifications.length}</span>
+                  <span className="absolute top-1 right-1.5 font-extrabold w-3 h-3 flex items-center justify-center  text-[7px] bg-dasadeep rounded-full border border-white" >{notifications.length}</span>
                 )}
               </button> 
                 
@@ -278,7 +295,12 @@ export default function Header() {
                           </button>
                         )}
                       </div>
-                      <div className="flex-1 overflow-y-auto max-h-80 px-2 py-1">
+                      <div 
+                        ref={scrollContainerRef}
+                        onScroll={checkScroll}
+                        className="flex-1 overflow-y-auto max-h-80 px-2 py-1 [&::-webkit-scrollbar]:hidden"
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                      >
                           {notifications.length === 0 ? (
                             <div className="py-6 text-center text-zinc-500 text-sm">
                               <Bell className="w-8 h-8 mx-auto text-zinc-300 mb-2" strokeWidth={1} />
@@ -339,6 +361,12 @@ export default function Header() {
                             ))
                           )}
                         </div>
+                        {/* Scroll Caret Indicator */}
+                        {canScrollDown && (
+                          <div className="flex justify-center items-center py-1 bg-white border-t border-zinc-50 rounded-b-2xl">
+                            <ChevronDown className="w-4 h-4 text-zinc-400" strokeWidth={2} />
+                          </div>
+                        )}
                     </motion.div>
                   )}
                 </AnimatePresence>

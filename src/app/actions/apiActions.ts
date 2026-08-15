@@ -10,6 +10,10 @@ import Notification from "@/models/notifications";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { Resend } from "resend";
+import WelcomeEmail from "@/components/email/WelcomeEmail";
+import ResetPasswordEmail from "@/components/email/ResetPasswordEmail";
+import PasswordResetSuccessEmail from "@/components/email/PasswordResetSuccessEmail";
 
 // Helper to verify token
 const verifyToken = async (token?: string | null) => {
@@ -69,6 +73,20 @@ export async function signupAction(userInfo: any) {
     const userObj = JSON.parse(JSON.stringify(newUser));
     userObj.password = undefined;
     
+    // Send Welcome Email
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+      await resend.emails.send({
+        from: "Dasaug <onboarding@resend.dev>", // Replace with verified domain in production
+        to: newUser.email,
+        subject: "Welcome to DaSA!",
+        react: WelcomeEmail({ name: newUser.fullName || "User", loginLink: `${baseUrl}/login` }),
+      });
+    } catch (emailError) {
+      console.error("Failed to send welcome email:", emailError);
+    }
+    
     const cookieStore = await cookies();
     cookieStore.set('token', token, { 
       httpOnly: true, 
@@ -94,10 +112,30 @@ export async function forgotPasswordAction(email: string) {
     await connectToDatabase();
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
+    
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
-    // In a real app, send email here
-    return { status: "success", message: "Token sent to email (simulated)" };
+    
+    // Send email using Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
+    // Construct the reset URL
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const resetLink = `${baseUrl}/resetpassword?token=${resetToken}`;
+    
+    const { data, error } = await resend.emails.send({
+      from: "Dasaug <onboarding@resend.dev>", // Replace with your verified domain when going to production
+      to: email,
+      subject: "Reset your DaSA App password",
+      react: ResetPasswordEmail({ resetLink, name: user.fullName || "User" }),
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      throw new Error("Failed to send reset email");
+    }
+
+    return { status: "success", message: "Token sent to email" };
   } catch (error: any) {
     return { status: "fail", message: error.message };
   }
@@ -117,6 +155,21 @@ export async function resetPasswordAction(tokenStr: string, body: any) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
+    
+    // Send password reset success email
+    try {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+      await resend.emails.send({
+        from: "DaSA App <onboarding@resend.dev>", // Replace with verified domain in production
+        to: user.email,
+        subject: "Your password has been successfully reset",
+        react: PasswordResetSuccessEmail({ name: user.fullName || "User", loginLink: `${baseUrl}/login` }),
+      });
+    } catch (emailError) {
+      console.error("Failed to send password reset success email:", emailError);
+    }
+    
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1d' });
     const userObj = user.toObject() as any;
     userObj._id = userObj._id.toString();

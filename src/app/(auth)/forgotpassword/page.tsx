@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { IoMailOutline, IoArrowBackOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
-import Swal from "sweetalert2";
 
 import FormInput from "@/components/features/ui/FormInput";
 import { DasaLogo } from "@/components/features/ui/DasaLogo";
-// import { forgotPasswordAction } from "@/app/actions/authActions";
+import { forgotPasswordAction } from "@/app/actions/apiActions";
 
 type forgotpassFormValues = {
   email: string;
@@ -18,41 +17,26 @@ export default function ForgotPasswordPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<forgotpassFormValues>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const onSubmit = async (data: forgotpassFormValues) => {
     if (!data.email) return;
-
-    const result = await Swal.fire({
-      title: "Reset Password?",
-      text: "We will send a secure password reset link to your email.",
-      icon: "info",
-      heightAuto: false,
-      backdrop: false,
-      showCancelButton: true,
-      confirmButtonColor: "#18181b", // Matches zinc-900 theme
-      cancelButtonColor: "#f3f4f6", // Light gray
-      cancelButtonText: "<span style='color: #18181b'>Cancel</span>",
-      confirmButtonText: "Yes, send link",
-      customClass: {
-        popup: 'rounded-3xl shadow-2xl border border-gray-100 font-poppins',
-        title: 'font-rethink text-2xl font-bold text-[#33312e]',
-        confirmButton: 'rounded-xl font-bold tracking-wide',
-        cancelButton: 'rounded-xl font-bold tracking-wide transition-colors',
-      }
-    });
-
-    if (result.isConfirmed) {
       setIsSubmitting(true);
       setServerError(null);
+      setSuccessMessage(null);
       try {
-        // await forgotPasswordAction(data.email);
-        console.log("Forgot password for:", data.email);
+        const res = await forgotPasswordAction(data.email);
+        if (res.status === "success") {
+          setSuccessMessage("Check your inbox for a link to reset your password.");
+        } else {
+          setServerError(res.message || "Failed to send reset link");
+        }
       } catch (err: any) {
         setServerError(err.message || "Failed to send reset link");
       } finally {
         setIsSubmitting(false);
       }
-    }
+    
   };
 
   const inputStyle = "bg-white border border-gray-200 hover:border-gray-300 focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 text-sm transition-all";
@@ -104,6 +88,14 @@ export default function ForgotPasswordPage() {
               </motion.p>
             )}
 
+            {successMessage && (
+              <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="p-3 bg-green-50 border border-green-200 rounded-lg text-center">
+                <p className="text-sm text-green-700 font-medium">
+                  {successMessage}
+                </p>
+              </motion.div>
+            )}
+
             {/* Submit Button */}
             <button
               disabled={isSubmitting}
@@ -151,15 +143,7 @@ export default function ForgotPasswordPage() {
           <div className="absolute inset-0 bg-black/60 z-10"></div>
           <div className="absolute inset-0 bg-gradient-to-tr from-[#33312e]/90 via-[#33312e]/40 to-transparent z-20"></div>
           
-          <div className="absolute bottom-16 left-12 right-12 text-white z-30">
-            <h2 className="text-4xl font-bold text-dasalight font-rethink leading-tight mb-4 tracking-tight">
-              Secure your <br/> account.
-            </h2>
-            <div className="w-12 h-1.5 bg-dasalight mb-5 rounded-full"></div>
-            <p className="text-white/80 font-poppins text-lg leading-relaxed max-w-md">
-              We are committed to protecting your privacy and ensuring your academic journey remains uninterrupted.
-            </p>
-          </div>
+          
         </div>
       </motion.div>
 
