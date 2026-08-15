@@ -1,20 +1,21 @@
-import { IProduct } from "@/models/Product";
-import { IUser } from "@/models/User";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+export type CartItem = any;
+export type UserDTO = any;
+
 export type storeState = {
-  user: IUser | null;
-  cart: IProduct[] 
-   removeItem: (id: string) => void;
+  user: UserDTO | null;
+  cart: CartItem[];
+  removeItem: (id: string) => void;
   updateQuantity: (id: string, qty: number) => void;
   clearCart: () => void;
 
   // computed values
   cartTotal: () => number;
-  setUser: (user: IUser|null) => void;
-  setCart: (product: IProduct, qty: number) => void;
-  loadCart: (cartItems: { product: IProduct; quantity: number }[]) => void;
+  setUser: (user: UserDTO|null) => void;
+  setCart: (product: any, qty: number) => void;
+  loadCart: (cartItems: any[]) => void;
 };
 
 export const useDashStore = create<storeState>()(
@@ -22,8 +23,8 @@ export const useDashStore = create<storeState>()(
     (set, get) => ({
       user: null,
       cart: [],
-  setUser: (user: IUser|null) => set(() => ({ user })),
-  setCart: (product: IProduct, qty: number) =>
+  setUser: (user: any|null) => set(() => ({ user })),
+  setCart: (product: any, qty: number) =>
   set((state) => {
     const existing = state.cart.find((item) => item._id === product._id);
 
