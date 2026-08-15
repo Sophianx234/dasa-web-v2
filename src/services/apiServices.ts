@@ -1,5 +1,5 @@
 import { eventI } from "@/components/features/dashboard/components/Events";
-import { resetPassFormValues } from "@/app/reset-password/[token]/page";
+import { resetPassFormValues } from "@/app/(auth)/resetpassword/page";
 import * as apiActions from "@/app/actions/apiActions";
 import { getGalleryAction, getVideosAction, uploadMediaAction } from "@/app/actions";
 

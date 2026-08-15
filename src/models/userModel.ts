@@ -125,6 +125,6 @@ userSchema.methods.createPasswordResetToken = function (this: userDocument) {
   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
   return resetToken;
 };
-const User = mongoose.model<userDocument>("User", userSchema);
+const User = mongoose.models.User || mongoose.model<userDocument>("User", userSchema);
 
 export default User;

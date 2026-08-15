@@ -60,6 +60,7 @@ export async function signupAction(userInfo: any) {
     await connectToDatabase();
     
     if (userInfo.email) {
+      userInfo.email = userInfo.email.toLowerCase().trim();
       const existingUser = await User.findOne({ email: userInfo.email });
       if (existingUser) {
         return { status: "fail", message: "Email is already in use" };
@@ -97,6 +98,10 @@ export async function signupAction(userInfo: any) {
 
     return { status: "success", token, user: userObj };
   } catch (error: any) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return { status: "fail", message: `${field} is already in use` };
+    }
     return { status: "fail", message: error.message };
   }
 }
@@ -111,7 +116,10 @@ export async function forgotPasswordAction(email: string) {
   try {
     await connectToDatabase();
     const user = await User.findOne({ email });
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      // Return success to prevent email enumeration, but do not send an email
+      return { status: "success", message: "Token sent to email" };
+    }
     
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });

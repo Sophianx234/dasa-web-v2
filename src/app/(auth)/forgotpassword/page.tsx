@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
           <div className="flex flex-col items-center text-center space-y-2 mb-8">
             <DasaLogo clns="text-sm" title="Dagbon Students Association" />
             <h1 className="font-rethink text-3xl md:text-4xl font-extrabold tracking-tight text-[#33312e] leading-[1.1]">
-              Reset Password.
+              Forgot Password.
             </h1>
             <p className="text-[#33312e]/70 text-sm font-poppins mt-2 max-w-xs mx-auto">
               Enter your email address and we'll send you instructions to securely reset your password.
@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 placeholder="Email address"
                 style={inputStyle}
-                icon={<IoMailOutline className="absolute left-3 text-gray-400 text-lg pointer-events-none" />}
+                icon={<IoMailOutline className="absolute  left-3 text-gray-400 text-lg pointer-events-none" />}
               />
               {errors.email && (
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs text-red-500 font-medium px-2 pt-1">

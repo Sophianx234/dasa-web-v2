@@ -109,7 +109,7 @@ function FormInput<T extends FieldValues>({
   const wrapperStyle = style ? style.replace(/focus:/g, 'focus-within:') : "";
 
   return (
-    <div className={`flex items-center relative overflow-hidden w-full ${wrapperStyle} ${addClass}`}>
+    <div className={`flex items-center rounded-lg relative overflow-hidden w-full ${wrapperStyle} ${addClass}`}>
       {icon} 
      
        {icon2}
