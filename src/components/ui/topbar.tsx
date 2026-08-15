@@ -94,7 +94,7 @@ export default function Topbar() {
         <div className="flex items-center gap-3">
           <Menu
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="md:hidden text-text-muted hover:text-primary cursor-pointer transition-colors"
+            className="md:hidden text-text-muted hover: cursor-pointer transition-colors"
           />
         </div>
 
@@ -159,7 +159,7 @@ export default function Topbar() {
                     <span className="text-[13px] font-semibold text-[#222222] leading-none">
                       {user.name || "Unknown"}
                     </span>
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-primary leading-none">
+                    <span className="text-[10px] uppercase tracking-wider font-bold  leading-none">
                       {user.role}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ export default function Topbar() {
                       handleLogout();
                       setIsUserMenuOpen(false);
                     }}
-                    className="flex items-center justify-center gap-2 w-full text-center px-4 py-2.5 text-[13px] font-medium text-primary hover:bg-primary/10 transition-colors"
+                    className="flex items-center justify-center gap-2 w-full text-center px-4 py-2.5 text-[13px] font-medium  hover:bg-primary/10 transition-colors"
                   >
                     {loading ? "Logging out..." : "Logout"}
                   </button>

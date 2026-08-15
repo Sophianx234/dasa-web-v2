@@ -101,7 +101,7 @@ export function ProductTableRow({ product }: { product: any }) {
                 {product.name}
               </p>
               {product.isFeatured && (
-                <span className="text-[9px] uppercase tracking-widest font-bold text-primary mt-1 inline-flex items-center">
+                <span className="text-[9px] uppercase tracking-widest font-bold  mt-1 inline-flex items-center">
                   <Star className="w-2 h-2 mr-1 fill-primary" /> Featured
                 </span>
               )}
@@ -113,7 +113,7 @@ export function ProductTableRow({ product }: { product: any }) {
           {product.category?.name || "Uncategorized"}
         </TableCell>
 
-        <TableCell className="text-[13px] font-bold text-primary">
+        <TableCell className="text-[13px] font-bold ">
           ₵{(product.price / 100).toFixed(2)}
         </TableCell>
 
@@ -136,7 +136,7 @@ export function ProductTableRow({ product }: { product: any }) {
               <span className="text-[#222222]">
                 {product.rating.toFixed(1)}
               </span>
-              <Star className="w-3 h-3 text-primary fill-primary" />
+              <Star className="w-3 h-3  fill-primary" />
               <span className="text-text-muted">({product.reviewsCount})</span>
             </div>
           ) : (

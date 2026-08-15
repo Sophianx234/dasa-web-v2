@@ -74,7 +74,7 @@ export default function ActivityClient({ logs }: { logs: any[] }) {
                         <span className="text-[12px] font-bold text-[#222222]">
                           {log.user?.name}
                         </span>
-                        <span className="text-[9px] uppercase tracking-widest text-primary">
+                        <span className="text-[9px] uppercase tracking-widest ">
                           {log.user?.role}
                         </span>
                       </div>

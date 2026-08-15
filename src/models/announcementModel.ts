@@ -57,5 +57,5 @@ const announcementSchema = new Schema<announcementI>({
 })
 
 
-const Announcement = model<announcementI>('Announcement',announcementSchema)
+const Announcement = (mongoose.models && mongoose.models.Announcement) ? mongoose.models.Announcement : mongoose.model("Announcement", announcementSchema)
 export default Announcement

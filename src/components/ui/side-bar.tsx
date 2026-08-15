@@ -120,7 +120,7 @@ export default function Sidebar() {
           variant="ghost"
           size="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className="text-text-muted hover:text-primary hover:bg-dasadeep/50 rounded-2xl h-10 w-10 mx-auto transition-colors"
+          className="text-text-muted hover: hover:bg-dasadeep/50 rounded-2xl h-10 w-10 mx-auto transition-colors"
         >
           <LucidePanelLeft size={18} strokeWidth={1.5} />
         </Button>
@@ -167,14 +167,7 @@ export default function Sidebar() {
                 </span>
               )}
 
-              {isActive && (
-                <motion.span
-                  layoutId="activeSidebarIndicator"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 h-1/2 w-1 bg-primary"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
+             
             </button>
           );
         })}

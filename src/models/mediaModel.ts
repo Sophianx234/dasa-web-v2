@@ -61,4 +61,4 @@ const mediaSchema = new mongoose.Schema<mediaDocument>({
 
 )
 
-export const Media = mongoose.model<mediaModel>('Media',mediaSchema)
+export const Media = (mongoose.models && mongoose.models.Media) ? mongoose.models.Media : mongoose.model("Media", mediaSchema)

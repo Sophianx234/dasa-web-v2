@@ -43,4 +43,4 @@ createdAt:String
 })
 
 
-export const Product = mongoose.model<productDocument>("Product",productSchema)
+export const Product = (mongoose.models && mongoose.models.Product) ? mongoose.models.Product : mongoose.model("Product", productSchema)

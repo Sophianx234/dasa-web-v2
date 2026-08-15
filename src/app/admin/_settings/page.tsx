@@ -219,7 +219,7 @@ export default function AdminSettingsPage() {
           {/* PROFILE */}
           <div className="bg-white border-none p-6 md:p-8 space-y-8">
             <h3 className="text-[14px] uppercase tracking-widest font-bold text-[#222222] pb-4 flex items-center gap-2">
-              <User className="w-4 h-4 text-primary" /> Profile Information
+              <User className="w-4 h-4 " /> Profile Information
             </h3>
 
             <div className="space-y-6">
@@ -304,7 +304,7 @@ export default function AdminSettingsPage() {
           {/* EMAIL */}
           <div className="bg-white border-none p-6 md:p-8 space-y-6">
             <h3 className="text-[14px] uppercase tracking-widest font-bold text-[#222222] pb-4 flex items-center gap-2">
-              <Mail className="w-4 h-4 text-primary" /> Email Address
+              <Mail className="w-4 h-4 " /> Email Address
             </h3>
 
             <div>
@@ -339,7 +339,7 @@ export default function AdminSettingsPage() {
           {/* PASSWORD */}
           <div className="bg-white border-none p-6 md:p-8 space-y-6">
             <h3 className="text-[14px] uppercase tracking-widest font-bold text-[#222222] pb-4 flex items-center gap-2">
-              <Lock className="w-4 h-4 text-primary" /> Change Password
+              <Lock className="w-4 h-4 " /> Change Password
             </h3>
 
             <div className="space-y-4">

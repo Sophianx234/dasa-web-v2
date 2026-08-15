@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 interface notificationI {
   notificationImg:string
   content:string,
@@ -20,5 +20,5 @@ const notificationsSchema = new Schema<notificationI>({
 })
 
 
-const Notification = model<notificationI>('Notifications',notificationsSchema)
+const Notification = (mongoose.models && mongoose.models.Notifications) ? mongoose.models.Notifications : mongoose.model("Notifications", notificationsSchema)
 export default Notification

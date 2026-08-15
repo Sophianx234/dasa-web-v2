@@ -147,7 +147,7 @@ export default function OrderDetailsSheetContent({
           {/* ITEMS */}
           <section>
             <h3 className="text-[11px] uppercase tracking-widest font-bold text-[#222222] mb-4 flex items-center gap-2">
-              <Package className="w-4 h-4 text-primary" strokeWidth={1.5} />
+              <Package className="w-4 h-4 " strokeWidth={1.5} />
               Order Items
             </h3>
 
@@ -190,7 +190,7 @@ export default function OrderDetailsSheetContent({
                 <span className="text-[11px] uppercase tracking-widest font-bold text-text-muted">
                   Total Amount
                 </span>
-                <span className="text-[16px] font-bold text-primary">
+                <span className="text-[16px] font-bold ">
                   {formatCurrency(order.totalAmount)}
                 </span>
               </div>
@@ -201,7 +201,7 @@ export default function OrderDetailsSheetContent({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <section>
               <h3 className="text-[11px] uppercase tracking-widest font-bold text-[#222222] mb-4 flex items-center gap-2">
-                <User className="w-4 h-4 text-primary" strokeWidth={1.5} />
+                <User className="w-4 h-4 " strokeWidth={1.5} />
                 Customer Info
               </h3>
               <div className="border-none bg-white p-5 space-y-4">
@@ -238,7 +238,7 @@ export default function OrderDetailsSheetContent({
 
             <section>
               <h3 className="text-[11px] uppercase tracking-widest font-bold text-[#222222] mb-4 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" strokeWidth={1.5} />
+                <MapPin className="w-4 h-4 " strokeWidth={1.5} />
                 Delivery Address
               </h3>
               <div className="border-none bg-white p-5 space-y-4">
@@ -277,7 +277,7 @@ export default function OrderDetailsSheetContent({
             <section className="pt-2">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
                 <h3 className="text-[11px] uppercase tracking-widest font-bold text-[#222222] flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-primary" strokeWidth={1.5} />
+                  <MapPin className="w-4 h-4 " strokeWidth={1.5} />
                   Location Map
                 </h3>
                 <div className="flex items-center gap-3 bg-dasadeep/10 px-3 py-1.5 border-none ">

@@ -50,6 +50,6 @@ const messagesSchema = new mongoose.Schema<messagesDocument>(
  
 
 
-const Message = mongoose.model<messagesDocument>("Message", messagesSchema);
+const Message = (mongoose.models && mongoose.models.Message) ? mongoose.models.Message : mongoose.model("Message", messagesSchema);
 
 export default Message;

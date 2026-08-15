@@ -6,7 +6,7 @@ export const STATUS_CONFIG: Record<
 > = {
   processing: {
     label: "Processing",
-    color: "bg-primary/10 text-primary ",
+    color: "bg-primary/10  ",
     icon: Clock,
   },
   in_transit: {
@@ -21,7 +21,7 @@ export const STATUS_CONFIG: Record<
   },
   delivered: {
     label: "Delivered",
-    color: "bg-primary/10 text-primary ",
+    color: "bg-primary/10  ",
     icon: CheckCircle,
   },
   cancelled: {

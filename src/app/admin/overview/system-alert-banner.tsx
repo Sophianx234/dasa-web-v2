@@ -75,7 +75,7 @@ export async function SystemAlertBanner() {
   return (
     <div className="bg-white border-none flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 transition-all hover:">
       <div className="flex items-center gap-3">
-        <div className="bg-dasadeep/30 p-2 text-primary">
+        <div className="bg-dasadeep/30 p-2 ">
           <CheckCircle className="w-5 h-5" strokeWidth={2.5} />
         </div>
         <div>

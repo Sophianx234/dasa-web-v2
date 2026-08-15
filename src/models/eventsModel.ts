@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 interface eventsI {
   eventImage: string;
@@ -33,6 +33,6 @@ const eventsSchema = new Schema<eventsI>(
   },
 );
 
-const Event = model<eventsI>("Event", eventsSchema);
+const Event = (mongoose.models && mongoose.models.Event) ? mongoose.models.Event : mongoose.model("Event", eventsSchema);
 
 export default Event;

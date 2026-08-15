@@ -32,6 +32,6 @@ const channelSchema = new Schema<channelDocument>(
   },
 );
 
-const Channel = model<channelDocument>("Channel", channelSchema);
+const Channel = (mongoose.models && mongoose.models.Channel) ? mongoose.models.Channel : mongoose.model("Channel", channelSchema);
 
 export default Channel;

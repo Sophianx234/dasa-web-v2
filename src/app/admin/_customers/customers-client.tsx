@@ -57,7 +57,7 @@ const getRoleBadgeStyle = (role: string) => {
     case "dispatcher":
       return "bg-blue-50 text-blue-700 ";
     case "buyer":
-      return "bg-primary/10 text-primary ";
+      return "bg-primary/10  ";
     default:
       return "bg-dasadeep/50 text-[#222222] ";
   }
@@ -66,7 +66,7 @@ const getRoleBadgeStyle = (role: string) => {
 const getOrderStatusColor = (status: string) => {
   switch (status) {
     case "delivered":
-      return "bg-primary/10 text-primary ";
+      return "bg-primary/10  ";
     case "cancelled":
       return "bg-red-50 text-red-700 ";
     case "processing":
@@ -221,7 +221,7 @@ export function CustomersClient({ initialUsers }: { initialUsers: any[] }) {
       <div className="bg-white border-none p-4 flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
         <div className="flex flex-1 items-center gap-3 w-full">
           <div className="relative w-full lg:w-96 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted group-focus-within: transition-colors" />
             <Input
               placeholder="SEARCH BY NAME OR EMAIL..."
               className="pl-11 pr-10 bg-dasadeep/20 text-[11px] uppercase tracking-wider h-12 rounded-2xl focus-visible:ring-0 focus-visible:"
@@ -425,7 +425,7 @@ export function CustomersClient({ initialUsers }: { initialUsers: any[] }) {
                             <DropdownMenuSeparator className="bg-" />
                             <DropdownMenuItem
                               onClick={() => handleSuspendUser(u)}
-                              className={`text-[11px] uppercase tracking-wider font-bold cursor-pointer rounded-2xl py-2.5 px-3 ${u.isSuspended ? "text-primary focus:bg-primary/10 focus:text-primary" : "text-red-600 focus:bg-red-50 focus:text-red-700"}`}
+                              className={`text-[11px] uppercase tracking-wider font-bold cursor-pointer rounded-2xl py-2.5 px-3 ${u.isSuspended ? " focus:bg-primary/10 focus:" : "text-red-600 focus:bg-red-50 focus:text-red-700"}`}
                             >
                               <Trash2 className="mr-2 h-3.5 w-3.5" />{" "}
                               {u.isSuspended
@@ -506,13 +506,13 @@ export function CustomersClient({ initialUsers }: { initialUsers: any[] }) {
                   <TabsList className="grid w-full max-w-md grid-cols-2 mb-8 bg-dasadeep/20 border-none rounded-2xl h-12 p-1">
                     <TabsTrigger
                       value="profile"
-                      className="rounded-2xl text-[11px] uppercase tracking-wider font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary"
+                      className="rounded-2xl text-[11px] uppercase tracking-wider font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:"
                     >
                       Profile & Settings
                     </TabsTrigger>
                     <TabsTrigger
                       value="orders"
-                      className="rounded-2xl text-[11px] uppercase tracking-wider font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-primary"
+                      className="rounded-2xl text-[11px] uppercase tracking-wider font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:"
                     >
                       Order History
                     </TabsTrigger>
@@ -522,10 +522,7 @@ export function CustomersClient({ initialUsers }: { initialUsers: any[] }) {
                     {user?.role === "admin" && (
                       <div className="bg-white border-none p-6 space-y-6">
                         <h3 className="text-[12px] uppercase tracking-widest font-bold text-[#222222] flex items-center gap-2 pb-4">
-                          <UserIcon
-                            className="w-4 h-4 text-primary"
-                            strokeWidth={1.5}
-                          />{" "}
+                          <UserIcon className="w-4 h-4 " strokeWidth={1.5} />{" "}
                           Role Management
                         </h3>
 
@@ -606,10 +603,7 @@ export function CustomersClient({ initialUsers }: { initialUsers: any[] }) {
                     <div className="bg-white border-none overflow-hidden">
                       <div className="p-6 flex items-center justify-between">
                         <h3 className="text-[12px] uppercase tracking-widest font-bold text-[#222222] flex items-center gap-2">
-                          <ShoppingBag
-                            className="w-4 h-4 text-primary"
-                            strokeWidth={1.5}
-                          />{" "}
+                          <ShoppingBag className="w-4 h-4 " strokeWidth={1.5} />{" "}
                           Past Orders
                         </h3>
                         {userOrders.length > 0 && (

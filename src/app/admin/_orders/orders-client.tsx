@@ -218,7 +218,7 @@ export function OrdersClient({
       {/* FILTER BAR */}
       <div className="bg-white border-none p-4 flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
         <div className="relative w-full lg:w-96 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted group-focus-within:text-primary transition-colors" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted group-focus-within: transition-colors" />
           <Input
             placeholder="SEARCH ORDER #, PHONE OR NAME..."
             className="pl-11 pr-10 bg-dasadeep/20 text-[11px] uppercase tracking-wider h-12 rounded-2xl focus-visible:ring-0 focus-visible:"
@@ -239,7 +239,7 @@ export function OrdersClient({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className={`h-12 px-4 border-none flex items-center gap-2 text-[11px] uppercase tracking-wider font-bold transition-colors ${statusFilter.length > 0 ? "bg-primary/10 text-primary " : "bg-white text-text-muted hover:text-[#222222] hover:bg-dasadeep/50"}`}
+                className={`h-12 px-4 border-none flex items-center gap-2 text-[11px] uppercase tracking-wider font-bold transition-colors ${statusFilter.length > 0 ? "bg-primary/10  " : "bg-white text-text-muted hover:text-[#222222] hover:bg-dasadeep/50"}`}
               >
                 <Filter className="w-3.5 h-3.5" />
                 STATUS
@@ -288,7 +288,7 @@ export function OrdersClient({
             onValueChange={(val) => updateURL({ dateFilter: val, page: "1" })}
           >
             <SelectTrigger
-              className={`h-12 w-[180px] rounded-2xl text-[11px] uppercase tracking-wider font-bold focus:ring-0 ${dateFilter !== "all" ? "bg-primary/10 text-primary " : "bg-white text-text-muted "}`}
+              className={`h-12 w-[180px] rounded-2xl text-[11px] uppercase tracking-wider font-bold focus:ring-0 ${dateFilter !== "all" ? "bg-primary/10  " : "bg-white text-text-muted "}`}
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
@@ -402,7 +402,7 @@ export function OrdersClient({
                   <th className="py-4 px-4 font-bold text-[10px] uppercase tracking-widest text-text-muted w-10">
                     <input
                       type="checkbox"
-                      className="rounded-2xl text-primary focus:ring-primary"
+                      className="rounded-2xl  focus:ring-primary"
                       checked={
                         initialOrders.length > 0 &&
                         selectedOrders.size === initialOrders.length
@@ -449,7 +449,7 @@ export function OrdersClient({
                       >
                         <input
                           type="checkbox"
-                          className="rounded-2xl text-primary focus:ring-primary"
+                          className="rounded-2xl  focus:ring-primary"
                           checked={selectedOrders.has(order.paymentReference)}
                           onChange={() =>
                             handleSelectOrder(order.paymentReference)

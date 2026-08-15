@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, use } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useDropzone } from "react-dropzone";
@@ -16,9 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, UploadCloud, X, Save } from "lucide-react";
+import { ArrowLeft, UploadCloud, X, Plus, Save } from "lucide-react";
 import Link from "next/link";
-import { GridLoader } from "react-spinners";
 
 // Validation schema
 const productSchema = z.object({
@@ -31,6 +30,7 @@ const productSchema = z.object({
   stock: z.number().min(0, "Stock cannot be negative"),
   rating: z.number().min(0).max(5).optional(),
   reviewsCount: z.number().min(0).optional(),
+  images: z.any().array().min(1, "At least one image is required"),
   features: z.array(z.string()).optional(),
   category: z.string().min(1, "Category is required"),
   variants: z
@@ -44,23 +44,10 @@ interface ICategoryOption {
   name: string;
 }
 
-export default function EditProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
-  const router = useRouter();
-
+export default function AddProductPage() {
   const [categories, setCategories] = useState<ICategoryOption[]>([]);
-  const [loadingData, setLoadingData] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
-
-  // Separate state for images
-  const [existingImages, setExistingImages] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<File[]>([]);
-  const [newPreviews, setNewPreviews] = useState<string[]>([]);
 
   const [product, setProduct] = useState({
     name: "",
@@ -72,91 +59,50 @@ export default function EditProductPage({
     stock: 1,
     rating: 0,
     reviewsCount: 0,
+    images: [] as File[],
     features: [] as string[],
     category: "",
     variants: [] as { name: string; options: string[] }[],
     isFeatured: false,
   });
 
-  const MAX_IMAGES = 5;
-
+  const [previews, setPreviews] = useState<string[]>([]);
   const [newFeature, setNewFeature] = useState("");
   const [variantName, setVariantName] = useState("");
   const [variantOptions, setVariantOptions] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
-        const catRes = await fetch("/api/admin/categories");
-        if (!catRes.ok) throw new Error("Failed to fetch categories");
-        setCategories(await catRes.json());
-
-        const prodRes = await fetch(`/api/admin/products/${id}`);
-        if (!prodRes.ok) throw new Error("Product not found");
-        const data = await prodRes.json();
-
-        setProduct({
-          name: data.name || "",
-          slug: data.slug || "",
-          description: data.description || "",
-          price: data.price || 0,
-          discountPrice: data.discountPrice || 0,
-          discountBadge: data.discountBadge || "",
-          stock: data.stock || 0,
-          rating: data.rating || 0,
-          reviewsCount: data.reviewsCount || 0,
-          features: data.features || [],
-          category: data.category?._id || data.category || "",
-          variants: data.variants || [],
-          isFeatured: data.isFeatured || false,
-        });
-
-        if (data.slug) {
-          setIsSlugManuallyEdited(true); // Don't auto-override existing slug on edit
-        }
-
-        setExistingImages(data.images || []);
-      } catch (e) {
-        console.error(e);
-        toast.error("Failed loading product.");
-      } finally {
-        setLoadingData(false);
+        const res = await fetch("/api/admin/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        setCategories(await res.json());
+      } catch {
+        toast.error("Unable to load categories.");
       }
-    };
-    fetchData();
-  }, [id]);
+    })();
+  }, []);
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const total = existingImages.length + newImages.length;
-      if (total >= MAX_IMAGES) {
-        toast.error("Maximum of 5 images allowed.");
-        return;
-      }
-      const allowedSlots = MAX_IMAGES - total;
-      const filesToAdd = acceptedFiles.slice(0, allowedSlots);
-      const previewURLs = filesToAdd.map((f) => URL.createObjectURL(f));
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (!acceptedFiles.length) return;
 
-      setNewImages((prev) => [...prev, ...filesToAdd]);
-      setNewPreviews((prev) => [...prev, ...previewURLs]);
-    },
-    [existingImages, newImages],
-  );
+    const previewURLs = acceptedFiles.map((file) => URL.createObjectURL(file));
+
+    setProduct((prev) => ({
+      ...prev,
+      images: [...prev.images, ...acceptedFiles],
+    }));
+
+    setPreviews((prev) => [...prev, ...previewURLs]);
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
+    maxFiles: 5,
   });
-
-  const removeNewImage = (idx: number) => {
-    setNewImages((prev) => prev.filter((_, i) => i !== idx));
-    setNewPreviews((prev) => prev.filter((_, i) => i !== idx));
-  };
-
-  const removeExistingImage = (url: string) => {
-    setExistingImages((prev) => prev.filter((x) => x !== url));
-  };
 
   const handleAddFeature = () => {
     if (newFeature.trim()) {
@@ -190,17 +136,14 @@ export default function EditProductPage({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
-
-    if (existingImages.length + newImages.length === 0) {
-      return setErrors({ images: "At least 1 image is required." });
-    }
+    setErrors({}); // reset errors
 
     try {
       const validated = productSchema.parse({
         ...product,
         price: Number(product.price),
         stock: Number(product.stock),
+        images: product.images,
       });
 
       setLoading(true);
@@ -229,20 +172,18 @@ export default function EditProductPage({
         );
       });
 
-      existingImages.forEach((url) => form.append("existingImages[]", url));
-      newImages.forEach((file) => form.append("newImages", file));
+      validated.images.forEach((file) => form.append("images", file));
 
-      const res = await fetch(`/api/admin/products/${id}`, {
-        method: "PUT",
+      const res = await fetch("/api/admin/products", {
+        method: "POST",
         body: form,
       });
 
-      if (!res.ok) throw new Error("Failed to update product");
+      if (!res.ok) throw new Error("Failed to save product");
 
-      toast.success("Product updated successfully.");
+      toast.success("Product added successfully.");
 
       router.push("/admin/products");
-      router.refresh();
     } catch (err: any) {
       if (err instanceof z.ZodError) {
         const fieldErrors: Record<string, string> = {};
@@ -257,19 +198,6 @@ export default function EditProductPage({
       setLoading(false);
     }
   };
-
-  if (loadingData) {
-    return (
-      <div className="absolute sm:relative flex inset-0 sm:h-dvh items-center justify-center">
-        <GridLoader size={18} color="#5B7763" />
-      </div>
-    );
-  }
-
-  const mergedImages = [
-    ...existingImages.map((url) => ({ type: "existing", url })),
-    ...newPreviews.map((url, idx) => ({ type: "new", url, idx })),
-  ];
 
   return (
     <motion.div
@@ -288,10 +216,10 @@ export default function EditProductPage({
           </Link>
           <div>
             <h2 className="text-[18px] uppercase tracking-widest font-bold text-[#222222]">
-              Edit Product
+              Add New Product
             </h2>
             <p className="text-[12px] text-text-muted mt-1 tracking-wider font-medium">
-              Update existing product details
+              Create a new product for your store
             </p>
           </div>
         </div>
@@ -301,7 +229,7 @@ export default function EditProductPage({
           className="bg-black text-white px-6 py-3 text-[11px] uppercase tracking-wider font-bold hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2 shadow-sm"
         >
           <Save className="w-3.5 h-3.5" />{" "}
-          {loading ? "Updating..." : "Update Product"}
+          {loading ? "Saving..." : "Save Product"}
         </button>
       </header>
 
@@ -421,7 +349,7 @@ export default function EditProductPage({
                     onChange={(e) =>
                       setProduct({ ...product, price: Number(e.target.value) })
                     }
-                    className="bg-dasadeep/20 text-[13px] rounded-2xl focus-visible:ring-0 focus-visible: text-primary font-bold h-12"
+                    className="bg-dasadeep/20 text-[13px] rounded-2xl focus-visible:ring-0 focus-visible:  font-bold h-12"
                   />
                   <p className="text-[10px] text-text-muted mt-2 tracking-wider font-medium">
                     The selling price.
@@ -590,63 +518,51 @@ export default function EditProductPage({
               product page.
             </p>
 
-            {mergedImages.length < MAX_IMAGES ? (
-              <div
-                {...getRootProps()}
-                className={`p-12 border-none rounded-2xl text-center cursor-pointer transition-colors ${
-                  isDragActive ? " bg-primary/5" : " hover: bg-dasadeep/10"
-                }`}
-              >
-                <input {...getInputProps()} />
-                <UploadCloud
-                  className="w-10 h-10 text-text-muted mx-auto mb-4"
-                  strokeWidth={1.5}
-                />
-                <p className="text-[13px] text-[#222222] font-bold uppercase tracking-wider">
-                  Drag & drop images here
-                </p>
-                <p className="text-[11px] uppercase tracking-wider text-text-muted mt-2">
-                  or click to browse (max {MAX_IMAGES} images)
-                </p>
-              </div>
-            ) : (
-              <div className="p-4 border-none bg-dasadeep/10 text-center">
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
-                  Maximum of {MAX_IMAGES} images reached.
-                </p>
-              </div>
-            )}
-
+            <div
+              {...getRootProps()}
+              className={`p-12 border-none rounded-2xl text-center cursor-pointer transition-colors ${
+                isDragActive ? " bg-primary/5" : " hover: bg-dasadeep/10"
+              }`}
+            >
+              <input {...getInputProps()} />
+              <UploadCloud
+                className="w-10 h-10 text-text-muted mx-auto mb-4"
+                strokeWidth={1.5}
+              />
+              <p className="text-[13px] text-[#222222] font-bold uppercase tracking-wider">
+                Drag & drop images here
+              </p>
+              <p className="text-[11px] uppercase tracking-wider text-text-muted mt-2">
+                or click to browse (max 5 images)
+              </p>
+            </div>
             {errors.images && (
               <p className="text-red-600 text-[10px] uppercase tracking-wider font-bold mt-2">
                 {errors.images}
               </p>
             )}
 
-            {mergedImages.length > 0 && (
+            {previews.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                {mergedImages.map((img, idx) => (
+                {previews.map((url, idx) => (
                   <div
                     key={idx}
                     className="relative group aspect-[4/5] border-none bg-dasadeep"
                   >
-                    <img src={img.url} className="w-full h-full object-cover" />
+                    <img src={url} className="w-full h-full object-cover" />
                     <button
                       type="button"
-                      onClick={() =>
-                        img.type === "existing"
-                          ? removeExistingImage(img.url)
-                          : removeNewImage(img.idx!)
-                      }
+                      onClick={() => {
+                        setPreviews((p) => p.filter((_, i) => i !== idx));
+                        setProduct((p) => ({
+                          ...p,
+                          images: p.images.filter((_, i) => i !== idx),
+                        }));
+                      }}
                       className="absolute top-2 right-2 w-8 h-8 bg-white border-none flex items-center justify-center text-text-muted hover:text-red-600 opacity-0 group-hover:opacity-100 transition-all shadow-sm"
                     >
                       <X className="w-4 h-4" strokeWidth={1.5} />
                     </button>
-                    {img.type === "new" && (
-                      <div className="absolute bottom-2 left-2 bg-white/90 px-2 py-0.5 text-[9px] uppercase tracking-widest font-bold border-none ">
-                        New
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
