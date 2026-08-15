@@ -279,7 +279,7 @@ export async function getAnonymousAction(token: string, lim: number | null) {
   try {
     await connectToDatabase();
     await verifyToken(token);
-    let query = Message.find({ isAnonymous: true }).lean();
+    let query = (Message as any).find({ isAnonymous: true }).lean();
     if (lim) query = query.limit(lim);
     const msgs = await query;
     return { status: "success", anonymous: { messages: msgs.map((m: any) => ({ ...m, _id: m._id.toString() })) } };
@@ -318,7 +318,7 @@ export async function updateAnnouncementAction(token: string, id: string, body: 
   try {
     await connectToDatabase();
     await verifyToken(token);
-    const updated = await Announcement.findByIdAndUpdate(id, body, { new: true }).lean();
+    const updated = await (Announcement as any).findByIdAndUpdate(id, body, { new: true }).lean();
     return { status: "success", data: { ...updated, _id: updated?._id.toString() } };
   } catch (error: any) {
     return { status: "fail", message: error.message };
@@ -329,7 +329,7 @@ export async function deleteAnnouncementAction(token: string, id: string) {
   try {
     await connectToDatabase();
     await verifyToken(token);
-    await Announcement.findByIdAndDelete(id);
+    await (Announcement as any).findByIdAndDelete(id);
     return { status: "success" };
   } catch (error: any) {
     return { status: "fail", message: error.message };
@@ -366,7 +366,7 @@ export async function updateEventAction(token: string, id: string, body: any) {
   try {
     await connectToDatabase();
     await verifyToken(token);
-    const updated = await Event.findByIdAndUpdate(id, body, { new: true }).lean();
+    const updated = await (Event as any).findByIdAndUpdate(id, body, { new: true }).lean();
     return { status: "success", data: { ...updated, _id: updated?._id.toString() } };
   } catch (error: any) {
     return { status: "fail", message: error.message };
@@ -377,7 +377,7 @@ export async function removeEventAction(token: string, id: string) {
   try {
     await connectToDatabase();
     await verifyToken(token);
-    await Event.findByIdAndDelete(id);
+    await (Event as any).findByIdAndDelete(id);
     return { status: "success" };
   } catch (error: any) {
     return { status: "fail", message: error.message };

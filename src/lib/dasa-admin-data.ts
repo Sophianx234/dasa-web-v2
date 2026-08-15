@@ -116,7 +116,7 @@ export const getRecentAnonymousMessages = cache(async (search: string) => {
 
 export const getRecentNotifications = cache(async () => {
   await connectToDatabase();
-  const notifs = await Notification.find({}).sort({ createdAt: -1 }).limit(10).lean();
+  const notifs = await Notification.find().sort({ createdAt: -1 }).limit(10).lean();
   
   return JSON.parse(JSON.stringify(notifs));
 });

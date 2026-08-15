@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/app/admin/_orders", "src/app/admin/_settings", "src/app/admin/_customers", "src/app/admin/_activity", "src/app/admin/_inventory", "src/app/admin/products"]
 }

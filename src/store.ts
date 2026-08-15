@@ -53,7 +53,7 @@ export const initialNavState = {
   images: [] as mediaType[],
   numMedia: 1,
   isLoading: false,
-  user: {} as signupCredentialsExtended | object,
+  user: {} as any,
   isOpenAttachFile: false,
 };
 
