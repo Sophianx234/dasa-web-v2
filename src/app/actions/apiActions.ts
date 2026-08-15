@@ -126,6 +126,30 @@ export async function resetPasswordAction(tokenStr: string, body: any) {
   }
 }
 
+export async function changePasswordAction(token: string, body: any) {
+  try {
+    await connectToDatabase();
+    const currentUser = await verifyToken(token);
+    const user = await User.findById(currentUser._id).select("+password");
+    
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (!(await user.isCorrectPassword(body.oldPassword))) {
+      throw new Error("Incorrect current password");
+    }
+
+    user.password = body.newPassword;
+    user.confirmPassword = body.confirmPassword;
+    await user.save();
+
+    return { status: "success", message: "Password updated successfully" };
+  } catch (error: any) {
+    return { status: "fail", message: error.message };
+  }
+}
+
 // --- USERS ---
 
 export async function getUserAction(token: string) {

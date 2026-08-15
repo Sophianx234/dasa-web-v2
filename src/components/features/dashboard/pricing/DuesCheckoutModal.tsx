@@ -9,6 +9,8 @@ import { getPayStackConfig } from "@/utils/paystack";
 import { toast } from "react-hot-toast";
 import { recordTransaction } from "@/actions/transaction";
 
+import { useAppStore } from "@/store";
+
 type PricingPackage = {
   title: string;
   price: string;
@@ -22,9 +24,11 @@ type DuesCheckoutModalProps = {
 };
 
 export default function DuesCheckoutModal({ isOpen, onClose, selectedPackage }: DuesCheckoutModalProps) {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const { isLoggedIn, user } = useAppStore((state) => state.nav);
+
+  const [fullName, setFullName] = useState(isLoggedIn ? user?.fullName || "" : "");
+  const [email, setEmail] = useState(isLoggedIn ? user?.email || "" : "");
+  const [phone, setPhone] = useState(isLoggedIn ? user?.contact || "" : "");
 
   const handleSuccess = async (reference: any) => {
     console.log("Payment Successful:", reference);

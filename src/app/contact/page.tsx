@@ -18,9 +18,18 @@ type ContactFormValues = {
   message: string;
 };
 
+import { useAppStore } from "@/store";
+
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormValues>();
+  const { isLoggedIn, user } = useAppStore((state) => state.nav);
+  
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormValues>({
+    defaultValues: {
+      fullName: isLoggedIn ? user?.fullName || "" : "",
+      email: isLoggedIn ? user?.email || "" : "",
+    }
+  });
 
   const onSubmit: SubmitHandler<ContactFormValues> = async (data) => {
     setIsSubmitting(true);

@@ -9,12 +9,16 @@ import { getPayStackConfig } from "@/utils/paystack";
 import { toast } from "react-hot-toast";
 import { recordTransaction } from "@/actions/transaction";
 
+import { useAppStore } from "@/store";
+
 const QUICK_AMOUNTS = [1000, 2500, 5000, 10000];
 
 export default function DonationCard() {
+  const { isLoggedIn, user } = useAppStore((state) => state.nav);
+
   const [amount, setAmount] = useState("");
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState(isLoggedIn ? user?.email || "" : "");
+  const [fullName, setFullName] = useState(isLoggedIn ? user?.fullName || "" : "");
   const [isAnonymous, setIsAnonymous] = useState(false);
 
   const onSuccess = async (reference: any) => {

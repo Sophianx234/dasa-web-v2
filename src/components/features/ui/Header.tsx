@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { toggleNav, setIsLoggedIn, setUser } from "../slices/navSlice";
 import { DasaLogo } from "./DasaLogo";
-import { HandHeart, User, ChevronDown, LogOut } from "lucide-react";
+import { HandHeart, User, ChevronDown, LogOut, Bell, X, CheckCheck } from "lucide-react";
 import { useAppStore } from "@/store";
 import { logoutAction } from "@/app/actions/apiActions";
 
@@ -38,11 +38,64 @@ export default function Header() {
   const { isLoggedIn, user } = useAppStore((state) => state.nav);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  
+  const [isNotifMenuOpen, setIsNotifMenuOpen] = useState(false);
+  const notifMenuRef = useRef<HTMLDivElement>(null);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [dismissedNotifs, setDismissedNotifs] = useState<string[]>([]);
+
+  // Load dismissed notifications from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("dasa_dismissed_notifs");
+      if (stored) {
+        try {
+          setDismissedNotifs(JSON.parse(stored));
+        } catch (e) {
+          console.error("Failed to parse dismissed notifications");
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      import("@/actions/anonymous").then(({ getAnonymousMessages }) => {
+        getAnonymousMessages().then((res) => {
+          if (res?.success && res.data) {
+            // Filter out any messages that the user has already dismissed
+            const activeNotifs = res.data.filter((msg: any) => !dismissedNotifs.includes(msg._id));
+            setNotifications(activeNotifs);
+          }
+        });
+      });
+    }
+  }, [isLoggedIn, dismissedNotifs]);
+
+  const handleClearItem = (id: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const newDismissed = [...dismissedNotifs, id];
+    setDismissedNotifs(newDismissed);
+    localStorage.setItem("dasa_dismissed_notifs", JSON.stringify(newDismissed));
+  };
+
+  const handleClearAll = () => {
+    const allCurrentIds = notifications.map(n => n._id);
+    const newDismissed = [...dismissedNotifs, ...allCurrentIds];
+    setDismissedNotifs(newDismissed);
+    localStorage.setItem("dasa_dismissed_notifs", JSON.stringify(newDismissed));
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
         setIsUserMenuOpen(false);
+      }
+      if (notifMenuRef.current && !notifMenuRef.current.contains(event.target as Node)) {
+        setIsNotifMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -189,7 +242,110 @@ export default function Header() {
 
           {/* User Profile / Login */}
           {isLoggedIn ? (
-            <div className="relative hidden sm:flex items-center h-full z-50" ref={userMenuRef}>
+            <div className="relative hidden sm:flex items-center gap-1 lg:gap-2 h-full z-50" ref={userMenuRef}>
+              
+              {/* Notification Bell */}
+              <div className="relative flex items-center h-full" ref={notifMenuRef}>
+                
+                <button
+                 onClick={() => setIsNotifMenuOpen(!isNotifMenuOpen)}
+                  className="relative p-2 text-zinc-600 hover:text-zinc-900 transition-colors focus:outline-none rounded-full ">
+                <Bell className="w-[20px] h-[20px]" strokeWidth={1.5} />
+                {notifications.length > 0 && (
+                  <span className="absolute top-1 right-1.5 font-extrabold w-3 h-3 flex items-center justify-center  text-[6px] bg-dasadeep rounded-full border border-white" >{notifications.length}</span>
+                )}
+              </button> 
+                
+
+                {/* Notification Dropdown */}
+                <AnimatePresence>
+                  {isNotifMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute top-[120%] right-0 w-80 bg-white border border-zinc-100 rounded-2xl shadow-xl shadow-zinc-200/50 py-3 flex flex-col z-[100]"
+                    >
+                      <div className="px-5 pb-3 border-b border-zinc-100 mb-2 flex items-center justify-between">
+                        <h3 className="font-bold font-montserrat text-zinc-800">Anonymous Messages</h3>
+                        {notifications.length > 0 && (
+                          <button 
+                            onClick={handleClearAll}
+                            className="text-xs font-medium text-dasadeep hover:text-dasadeep/80 transition-colors flex items-center gap-1"
+                          >
+                            <CheckCheck className="w-3.5 h-3.5" /> Clear all
+                          </button>
+                        )}
+                      </div>
+                      <div className="flex-1 overflow-y-auto max-h-80 px-2 py-1">
+                          {notifications.length === 0 ? (
+                            <div className="py-6 text-center text-zinc-500 text-sm">
+                              <Bell className="w-8 h-8 mx-auto text-zinc-300 mb-2" strokeWidth={1} />
+                              No new messages
+                            </div>
+                          ) : (
+                            notifications.map((msg, idx) => (
+                              <Link 
+                                key={msg._id || idx} 
+                                href="/anonymous" 
+                                onClick={() => {
+                                  setIsNotifMenuOpen(false);
+                                  handleClearItem(msg._id);
+                                }}
+                                className="flex items-start gap-3 p-3 hover:bg-zinc-50 rounded-xl cursor-pointer transition-colors mb-1 group relative"
+                              >
+                                {/* Avatar */}
+                                <div className="flex-shrink-0 relative">
+                                  {msg.avatarUrl ? (
+                                    <img 
+                                      src={msg.avatarUrl} 
+                                      alt="Anonymous Avatar" 
+                                      className="w-10 h-10 rounded-full object-cover border border-zinc-200"
+                                    />
+                                  ) : (
+                                    <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center border border-zinc-200">
+                                      <User className="w-5 h-5 text-zinc-400" strokeWidth={1.5} />
+                                    </div>
+                                  )}
+                                  <div className="absolute -bottom-1 -right-1 bg-dasadeep rounded-full p-1 border-2 border-white">
+                                    <Bell className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                  </div>
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="flex-1 min-w-0 pt-0.5 pr-4">
+                                  <p className="text-sm text-zinc-800 leading-tight mb-1">
+                                    <span className="font-bold text-zinc-900 group-hover:text-dasadeep transition-colors">
+                                      {msg.authorName || "Anonymous User"}
+                                    </span>{" "}
+                                    <span className="text-zinc-600">texted...</span>
+                                  </p>
+                                  <p className="text-xs text-zinc-500 line-clamp-1 mb-1">{msg.message}</p>
+                                  <span className="text-[10px] font-medium text-zinc-400">
+                                    {new Date(msg.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                </div>
+                                
+                                {/* Clear Individual Button */}
+                                <button
+                                  onClick={(e) => handleClearItem(msg._id, e)}
+                                  className="absolute top-3 right-3 p-1.5 text-zinc-300 hover:text-zinc-600 hover:bg-zinc-200 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                                  title="Dismiss notification"
+                                >
+                                  <X className="w-3.5 h-3.5" />
+                                </button>
+                              </Link>
+                            ))
+                          )}
+                        </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <div className="h-6 w-[1px] bg-zinc-200 mx-1 hidden lg:block" />
+
               <button 
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                 className="flex items-center gap-2 text-zinc-700 hover:text-zinc-900 font-bold text-sm transition-colors duration-300 focus:outline-none"

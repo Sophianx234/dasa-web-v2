@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useRef } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { User, Mail, BookOpen, MapPin, Phone, Camera, Save, Loader2, CheckCircle2 } from "lucide-react";
+import { User, Mail, BookOpen, MapPin, Phone, Camera, Save, Loader2, CheckCircle2, Lock, Key } from "lucide-react";
 import FormInput from "@/components/features/ui/FormInput";
 import Select from "@/components/features/ui/Select";
 import { motion } from "framer-motion";
-import { updateUserAction } from "@/app/actions/apiActions";
+import { updateUserAction, changePasswordAction } from "@/app/actions/apiActions";
 import { useAppStore } from "@/store";
 import { setUser } from "@/components/features/slices/navSlice";
 
@@ -37,6 +37,24 @@ export default function AccountClient({ initialUser }: { initialUser: any }) {
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  
+  const {
+    register: registerPwd,
+    handleSubmit: handlePwdSubmit,
+    formState: { errors: pwdErrors },
+    reset: resetPwd,
+  } = useForm({
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
+
+  const [isChangingPwd, setIsChangingPwd] = useState(false);
+  const [pwdSuccessMsg, setPwdSuccessMsg] = useState("");
+  const [pwdErrorMsg, setPwdErrorMsg] = useState("");
+
   const [profileImage, setProfileImage] = useState(initialUser?.profileImage || "");
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -95,6 +113,30 @@ export default function AccountClient({ initialUser }: { initialUser: any }) {
       setErrorMsg(err.message || "An unexpected error occurred");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const onPwdSubmit = async (data: any) => {
+    if (data.newPassword !== data.confirmPassword) {
+      setPwdErrorMsg("New password and confirm password do not match");
+      return;
+    }
+
+    setIsChangingPwd(true);
+    setPwdErrorMsg("");
+    setPwdSuccessMsg("");
+    try {
+      const res = await changePasswordAction("", data);
+      if (res?.status === "success") {
+        setPwdSuccessMsg("Password updated successfully!");
+        resetPwd();
+      } else {
+        setPwdErrorMsg(res?.message || "Failed to update password");
+      }
+    } catch (err: any) {
+      setPwdErrorMsg(err.message || "An unexpected error occurred");
+    } finally {
+      setIsChangingPwd(false);
     }
   };
 
@@ -216,27 +258,64 @@ export default function AccountClient({ initialUser }: { initialUser: any }) {
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-zinc-700">Course of Study</label>
                 <div className="relative">
-                  <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
-                  <input
-                    type="text"
+                  <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5 z-10" />
+                  <select
                     {...register("course")}
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all"
-                    placeholder="BSc Computer Science"
-                  />
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled hidden>Select Course</option>
+                    {[
+                      "Medicine and Surgery", "Dental Surgery", "Pharmacy (PharmD)", "Dietetics", 
+                      "Medical Laboratory", "Occupational Therapy", "Physiotherapy", "Radiography", 
+                      "Nursing", "Midwifery", "Physics", "Chemistry", "Geophysics", "Mathematics", 
+                      "Statistics", "Actuarial Science", "Computer Science", "Biomathematics", 
+                      "Geology", "Applied Geology", "Applied Geophysics", "Animal Biology and Conservation Science", 
+                      "Biochemistry, Cell, and Molecular Biology", "Nutrition", "Food Science", 
+                      "Plant and Environmental Biology", "Marine Science", "Fisheries Science", 
+                      "Psychology", "Microbiology", "Animal Science", "Crop Science", "Soil Science", 
+                      "Agricultural Economics", "Agribusiness", "Agricultural Extension", 
+                      "Post-Harvest Technology", "Family and Consumer Science (Food and Clothing Option)", 
+                      "Family and Consumer Science (Family and Child Studies Option)", 
+                      "Material Science and Engineering", "Computer Engineering", "Biomedical Engineering", 
+                      "Food Process Engineering", "Agricultural Engineering", "Veterinary Medicine",
+                      "Business Administration", "Laws (LLB)", "Religions", "Philosophy and Classics", 
+                      "History", "Archaeology and Heritage Studies", "English", "French", 
+                      "Modern Languages", "Linguistics", "Economics", "Political Science", "Sociology", 
+                      "Geography and Resource Development", "Social Work", "Dance Studies", 
+                      "Theatre Arts", "Music", "Information Studies", "Education", 
+                      "Sports and Physical Culture Studies", "Diploma in Accounting", 
+                      "Diploma in Public Administration", "Diploma in Statistics", "Diploma in Librarianship", 
+                      "Diploma in Archives Administration", "Diploma in Adult Education", 
+                      "Diploma in Youth Development Work"
+                    ].map((courseName) => (
+                      <option key={courseName} value={courseName}>{courseName}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               
               {/* Hall */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-zinc-700">Hall </label>
+                <label className="text-sm font-semibold text-zinc-700">Hall</label>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
-                  <input
-                    type="text"
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5 z-10" />
+                  <select
                     {...register("hall")}
-                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all"
-                    placeholder="Legon Hall"
-                  />
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled hidden>Select Hall</option>
+                    {[
+                      "Legon Hall", "Akuafo Hall", "Commonwealth Hall", "Volta Hall", "Mensah Sarbah Hall", 
+                      "Jean Nelson Aka Hall", "Alex A. Kwapong Hall", "Hilla Limann Hall", "Elizabeth Frances Sey Hall",
+                      "Jubilee Hall", "International Students Hostel (ISH)", "Valco Trust Hostel",
+                      "Pentagon Hostels", "Evandy Hostel", "Bani Hostel", 
+                      "Mensah Sarbah Hall Annex A", "Mensah Sarbah Hall Annex B", "Mensah Sarbah Hall Annex C", "Mensah Sarbah Hall Annex D",
+                      "Akuafo Hall Annex A", "Akuafo Hall Annex B", "Akuafo Hall Annex C", "Akuafo Hall Annex D", 
+                      "Other"
+                    ].map((hallName) => (
+                      <option key={hallName} value={hallName}>{hallName}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -249,6 +328,93 @@ export default function AccountClient({ initialUser }: { initialUser: any }) {
               >
                 {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Change Password Section */}
+      <div className="mt-8 bg-white rounded-3xl shadow-xl shadow-zinc-200/50 border border-zinc-100 overflow-hidden">
+        <div className="bg-zinc-50 border-b border-zinc-100 px-8 py-6">
+          <h2 className="text-xl font-bold font-montserrat text-zinc-800 flex items-center gap-2">
+            <Lock className="w-5 h-5 text-dasadeep" /> Security
+          </h2>
+          <p className="text-zinc-500 text-sm mt-1">Update your password to keep your account secure.</p>
+        </div>
+
+        <div className="p-8 md:p-12">
+          {pwdSuccessMsg && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8 p-4 bg-green-50 text-green-700 rounded-2xl flex items-center gap-3 border border-green-100">
+              <CheckCircle2 className="w-5 h-5" /> {pwdSuccessMsg}
+            </motion.div>
+          )}
+          {pwdErrorMsg && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8 p-4 bg-red-50 text-red-700 rounded-2xl flex items-center gap-3 border border-red-100">
+              <span className="w-5 h-5 flex items-center justify-center rounded-full bg-red-100 font-bold">!</span> {pwdErrorMsg}
+            </motion.div>
+          )}
+
+          <form onSubmit={handlePwdSubmit(onPwdSubmit)} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              {/* Old Password */}
+              <div className="space-y-2 md:col-span-2 max-w-md">
+                <label className="text-sm font-semibold text-zinc-700">Current Password</label>
+                <div className="relative">
+                  <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
+                  <input
+                    type="password"
+                    {...registerPwd("oldPassword", { required: "Current password is required" })}
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                {pwdErrors.oldPassword && <p className="text-red-500 text-xs mt-1">{pwdErrors.oldPassword.message as string}</p>}
+              </div>
+
+              {/* New Password */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-zinc-700">New Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
+                  <input
+                    type="password"
+                    {...registerPwd("newPassword", { 
+                      required: "New password is required",
+                      minLength: { value: 8, message: "Password must be at least 8 characters" }
+                    })}
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all"
+                    placeholder="Enter new password"
+                  />
+                </div>
+                {pwdErrors.newPassword && <p className="text-red-500 text-xs mt-1">{pwdErrors.newPassword.message as string}</p>}
+              </div>
+
+              {/* Confirm Password */}
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-zinc-700">Confirm Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 w-5 h-5" />
+                  <input
+                    type="password"
+                    {...registerPwd("confirmPassword", { required: "Confirm password is required" })}
+                    className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-12 pr-4 text-sm focus:ring-2 focus:ring-dasadeep/20 focus:border-dasadeep outline-none transition-all"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+                {pwdErrors.confirmPassword && <p className="text-red-500 text-xs mt-1">{pwdErrors.confirmPassword.message as string}</p>}
+              </div>
+            </div>
+
+            <div className="pt-6 flex justify-end border-t border-zinc-100">
+              <button
+                type="submit"
+                disabled={isChangingPwd}
+                className="flex items-center gap-2 bg-zinc-900 hover:bg-opacity-90 text-white font-bold py-3.5 px-8 rounded-full transition-all active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
+              >
+                {isChangingPwd ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                Change Password
               </button>
             </div>
           </form>
