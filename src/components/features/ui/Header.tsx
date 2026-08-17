@@ -259,7 +259,7 @@ export default function Header() {
 
           {/* User Profile / Login */}
           {isLoggedIn ? (
-            <div className="relative hidden sm:flex items-center gap-1 lg:gap-2 h-full z-50" ref={userMenuRef}>
+            <div className="relative flex items-center gap-1 lg:gap-2 h-full z-50" ref={userMenuRef}>
               
               {/* Notification Bell */}
               <div className="relative flex items-center h-full" ref={notifMenuRef}>
@@ -387,8 +387,8 @@ export default function Header() {
                 ) : (
                   <User className="w-[22px] h-[22px]" strokeWidth={1.5} />
                 )}
-                <div className="truncate max-w-[100px]">
-                  <span>Hello, </span>
+                <div className="truncate max-w-[70px] sm:max-w-[100px]">
+                  <span className="hidden sm:inline">Hello, </span>
                   {user?.fullName ? user.fullName.split(" ")[0] : "Account"}
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 text-zinc-400 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
