@@ -256,7 +256,14 @@ export default function Header() {
             <HandHeart className="w-4 h-4  transition-transform duration-300" />
             Make Donation
           </Link>
-
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => toggleNav()}
+            className="lg:hidden p-2 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
+            aria-label="Open Menu"
+          >
+            <IoMenu className="w-7 h-7" />
+          </button>
           {/* User Profile / Login */}
           {isLoggedIn ? (
             <div className="relative flex items-center gap-1 lg:gap-2 h-full z-50" ref={userMenuRef}>
@@ -414,14 +421,7 @@ export default function Header() {
             </Link>
           )}
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => toggleNav()}
-            className="lg:hidden p-2 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
-            aria-label="Open Menu"
-          >
-            <IoMenu className="w-7 h-7" />
-          </button>
+
         </div>
       </div>
       </div>
