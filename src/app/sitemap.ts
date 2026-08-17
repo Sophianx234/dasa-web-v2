@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://dasa.com'; // Make sure to replace this with your actual production domain later!
+  const baseUrl = 'https://dasaug.com'; // Make sure to replace this with your actual production domain later!
 
   return [
     {
