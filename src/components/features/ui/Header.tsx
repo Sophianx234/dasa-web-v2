@@ -399,7 +399,7 @@ export default function Header() {
             className="lg:hidden sm:p-2  sm:mr-0 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
             aria-label="Open Menu"
           >
-            <IoMenu className="w-7 h-7" />
+            <IoMenu className="w-10 h-10" />
           </button>
               <div className={`absolute top-[3.5rem] right-0 pt-2 w-48 transition-all duration-300 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                 <div className={`relative bg-white rounded-xl border border-zinc-200 shadow-xl overflow-hidden flex flex-col transform transition-transform duration-300 ${isUserMenuOpen ? 'translate-y-0' : 'translate-y-2'}`}>
