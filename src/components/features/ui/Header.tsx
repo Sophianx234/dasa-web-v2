@@ -259,7 +259,7 @@ export default function Header() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => toggleNav()}
-            className="lg:hidden p-2 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
+            className="lg:hidden sm:p-2 -mr-2 sm:mr-0 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
             aria-label="Open Menu"
           >
             <IoMenu className="w-7 h-7" />
@@ -394,11 +394,11 @@ export default function Header() {
                 ) : (
                   <User className="w-[22px] h-[22px]" strokeWidth={1.5} />
                 )}
-                <div className="truncate max-w-[70px] sm:max-w-[100px]">
+                <div className="truncate hidden sm:block max-w-[70px] sm:max-w-[100px]">
                   <span className="hidden sm:inline">Hello, </span>
                   {user?.fullName ? user.fullName.split(" ")[0] : "Account"}
                 </div>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-300 text-zinc-400 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
+                <ChevronDown className={`w-4 h-4 transition-transform hidden sm:block duration-300 text-zinc-400 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
               </button>
 
               <div className={`absolute top-[3.5rem] right-0 pt-2 w-48 transition-all duration-300 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
