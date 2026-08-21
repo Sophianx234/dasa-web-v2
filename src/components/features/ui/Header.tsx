@@ -282,7 +282,7 @@ export default function Header() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-[120%] right-0 w-80 bg-white border border-zinc-100 rounded-2xl shadow-xl shadow-zinc-200/50 py-3 flex flex-col z-[100]"
+                      className="absolute top-[120%] -right-16 sm:right-0 w-[calc(100vw-2rem)] sm:w-80 max-w-[320px] bg-white border border-zinc-100 rounded-2xl shadow-xl shadow-zinc-200/50 py-3 flex flex-col z-[100]"
                     >
                       <div className="px-5 pb-3 border-b border-zinc-100 mb-2 flex items-center justify-between">
                         <h3 className="font-bold font-montserrat text-zinc-800">Anonymous Messages</h3>
@@ -393,14 +393,6 @@ export default function Header() {
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform hidden sm:block duration-300 text-zinc-400 ${isUserMenuOpen ? 'rotate-180' : ''}`} strokeWidth={2} />
               </button>
-                {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => toggleNav()}
-            className="lg:hidden sm:p-2  sm:mr-0 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
-            aria-label="Open Menu"
-          >
-            <IoMenu className="w-10 h-10" />
-          </button>
               <div className={`absolute top-[3.5rem] right-0 pt-2 w-48 transition-all duration-300 ${isUserMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                 <div className={`relative bg-white rounded-xl border border-zinc-200 shadow-xl overflow-hidden flex flex-col transform transition-transform duration-300 ${isUserMenuOpen ? 'translate-y-0' : 'translate-y-2'}`}>
                     <Link href="/account" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors">
@@ -420,6 +412,16 @@ export default function Header() {
               Login
             </Link>
           )}
+
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => toggleNav()}
+            className="lg:hidden block sm:p-2 sm:mr-0 rounded-xl text-zinc-800 hover:text-zinc-900 transition-all duration-300 active:scale-95"
+            aria-label="Open Menu"
+          >
+            <IoMenu className="w-10 h-10" />
+          </button>
+
 
 
         </div>
