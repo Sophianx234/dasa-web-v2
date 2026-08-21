@@ -15,6 +15,8 @@ import WelcomeEmail from "@/components/email/WelcomeEmail";
 import ResetPasswordEmail from "@/components/email/ResetPasswordEmail";
 import PasswordResetSuccessEmail from "@/components/email/PasswordResetSuccessEmail";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://www.dasaug.com";
+
 // Helper to verify token
 const verifyToken = async (token?: string | null) => {
   const cookieStore = await cookies();
@@ -77,12 +79,11 @@ export async function signupAction(userInfo: any) {
     // Send Welcome Email
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
       await resend.emails.send({
         from: "Dasaug <onboarding@resend.dev>", // Replace with verified domain in production
         to: newUser.email,
         subject: "Welcome to DaSA!",
-        react: WelcomeEmail({ name: newUser.fullName || "User", loginLink: `${baseUrl}/login` }),
+        react: WelcomeEmail({ name: newUser.fullName || "User", loginLink: `${BASE_URL}/login` }),
       });
     } catch (emailError) {
       console.error("Failed to send welcome email:", emailError);
@@ -128,8 +129,7 @@ export async function forgotPasswordAction(email: string) {
     const resend = new Resend(process.env.RESEND_API_KEY);
     
     // Construct the reset URL
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const resetLink = `${baseUrl}/resetpassword?token=${resetToken}`;
+    const resetLink = `${BASE_URL}/resetpassword?token=${resetToken}`;
     
     const { data, error } = await resend.emails.send({
       from: "Dasaug <onboarding@resend.dev>", // Replace with your verified domain when going to production
@@ -167,12 +167,11 @@ export async function resetPasswordAction(tokenStr: string, body: any) {
     // Send password reset success email
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
       await resend.emails.send({
         from: "DaSA App <onboarding@resend.dev>", // Replace with verified domain in production
         to: user.email,
         subject: "Your password has been successfully reset",
-        react: PasswordResetSuccessEmail({ name: user.fullName || "User", loginLink: `${baseUrl}/login` }),
+        react: PasswordResetSuccessEmail({ name: user.fullName || "User", loginLink: `${BASE_URL}/login` }),
       });
     } catch (emailError) {
       console.error("Failed to send password reset success email:", emailError);
